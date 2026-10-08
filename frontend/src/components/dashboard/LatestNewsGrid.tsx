@@ -39,26 +39,26 @@ export function LatestNewsGrid() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold tracking-tight text-slate-900">
+            <h2 className="text-lg font-bold tracking-tight text-foreground">
               LATEST NEWS & INTELLIGENCE
             </h2>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-muted text-muted-foreground border border-border">
               Simulated Feed
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Recent developments across your competitive landscape.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-slate-500">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5 font-mono text-[11px]">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <Clock className="w-3.5 h-3.5 text-muted-foreground" />
             <span>Updated {lastUpdatedSec} sec ago</span>
           </span>
           <Link
             href="/intelligence"
-            className="font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1"
+            className="font-semibold text-primary hover:text-primary/80 flex items-center gap-1"
           >
             <span>All Intelligence</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -76,23 +76,23 @@ export function LatestNewsGrid() {
             <article
               key={item.id}
               onClick={() => router.push(`/intelligence/${item.id}`)}
-              className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-slate-300"
+              className="bg-card rounded-md border border-border shadow-xs overflow-hidden flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-primary/50"
             >
               <div>
                 {/* Real-World Technology / Datacenter Image with 3D Hover Scale */}
-                <div className="w-full h-44 relative overflow-hidden bg-slate-900">
+                <div className="w-full h-44 relative overflow-hidden bg-[#11110F]">
                   <SafeImage
                     src={media.imageUrl}
                     alt={media.altText}
                     fallbackTicker={item.companyTicker}
                     enableHoverEffect={true}
-                    className="h-full w-full"
+                    className="h-full w-full opacity-90 group-hover:opacity-100 transition-opacity"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#11110F]/80 via-transparent to-transparent pointer-events-none" />
 
                   {/* Overlaid Badges */}
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-slate-900/90 text-white backdrop-blur-xs border border-white/10 shadow-xs">
+                    <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-[#11110F]/90 text-[#F5F2EA] backdrop-blur-xs border border-[#F5F2EA]/10 shadow-xs">
                       {item.companyTicker}
                     </span>
                     <CategoryBadge category={item.category} />
@@ -102,43 +102,43 @@ export function LatestNewsGrid() {
                     <SeverityBadge severity={item.impact} />
                   </div>
 
-                  <div className="absolute bottom-2 left-3 right-3 text-[11px] text-white/90 font-medium truncate drop-shadow-xs">
+                  <div className="absolute bottom-2 left-3 right-3 text-[11px] text-[#F5F2EA]/90 font-medium truncate drop-shadow-xs">
                     {media.caption}
                   </div>
                 </div>
 
                 {/* Content Area */}
                 <div className="p-4 sm:p-5 space-y-3">
-                  <h3 className="text-sm font-bold text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+                  <h3 className="text-sm font-bold text-foreground leading-snug group-hover:opacity-80 transition-opacity line-clamp-2">
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                     {item.summary}
                   </p>
 
                   {/* WHY IT MATTERS Section */}
-                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs space-y-1">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 block">
+                  <div className="p-2.5 rounded-md bg-background border border-border text-xs space-y-1">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground block">
                       Why It Matters
                     </span>
-                    <p className="text-[11px] text-slate-700 leading-relaxed line-clamp-2">
+                    <p className="text-[11px] text-foreground leading-relaxed line-clamp-2">
                       {item.leonAnalysis.marketImpact}
                     </p>
                   </div>
 
                   {/* LEON ASSESSMENT Section */}
-                  <div className="p-2.5 rounded-lg bg-blue-50/50 border border-blue-100 text-xs space-y-1">
+                  <div className="p-2.5 rounded-md bg-muted/50 border border-border text-xs space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-900 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-blue-600" />
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-primary flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-primary" />
                         Leon Assessment
                       </span>
-                      <span className="text-[10px] font-mono text-blue-700 font-semibold">
+                      <span className="text-[10px] font-mono text-muted-foreground font-semibold">
                         [AI ASSESSMENT]
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-700 leading-relaxed line-clamp-2">
+                    <p className="text-[11px] text-foreground leading-relaxed line-clamp-2">
                       {item.leonAnalysis.competitiveImplications}
                     </p>
                   </div>
@@ -146,15 +146,15 @@ export function LatestNewsGrid() {
               </div>
 
               {/* Card Footer */}
-              <div className="p-4 sm:p-5 pt-0 border-t border-slate-100 mt-2 flex items-center justify-between text-xs text-slate-500">
-                <span className="font-mono text-[11px] text-slate-500 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="p-4 sm:p-5 pt-0 border-t border-border mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                <span className="font-mono text-[11px] text-muted-foreground flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#2E7D32]" />
                   <span>
                     {item.sources.length} sources · {timeAgo}
                   </span>
                 </span>
 
-                <span className="font-semibold text-blue-600 group-hover:text-blue-800 flex items-center gap-1 transition-colors text-xs">
+                <span className="font-semibold text-primary group-hover:text-primary/80 flex items-center gap-1 transition-colors text-xs">
                   <span>View Intelligence</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>

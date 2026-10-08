@@ -51,53 +51,53 @@
 }
 
 :root {
-  /* MarketLens Light Enterprise Workspace */
-  --background: oklch(0.988 0.003 250);
-  --foreground: oklch(0.18 0.025 260);
+  /* MarketLens Editorial Warm Workspace */
+  --background: #F2EFE7;
+  --foreground: #11110F;
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.025 260);
+  --card: #F5F2EA;
+  --card-foreground: #11110F;
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.025 260);
+  --popover: #F5F2EA;
+  --popover-foreground: #11110F;
 
-  /* Intelligence Royal Blue */
-  --primary: oklch(0.48 0.22 258);
-  --primary-foreground: oklch(0.99 0 0);
+  /* Editorial Near-Black Action */
+  --primary: #11110F;
+  --primary-foreground: #F5F2EA;
 
-  --secondary: oklch(0.96 0.008 250);
-  --secondary-foreground: oklch(0.24 0.03 260);
+  --secondary: #E8E4DB;
+  --secondary-foreground: #4B4840;
 
-  --muted: oklch(0.96 0.006 250);
-  --muted-foreground: oklch(0.48 0.02 255);
+  --muted: #E8E4DB;
+  --muted-foreground: #4B4840;
 
-  --accent: oklch(0.95 0.015 258);
-  --accent-foreground: oklch(0.25 0.05 258);
+  --accent: #E8E4DB;
+  --accent-foreground: #11110F;
 
-  --destructive: oklch(0.58 0.22 26);
-  --border: oklch(0.90 0.008 250);
-  --input: oklch(0.88 0.01 250);
-  --ring: oklch(0.48 0.22 258);
+  --destructive: #9C2A2A;
+  --border: #C9C4B9;
+  --input: #E8E4DB;
+  --ring: #11110F;
 
-  /* Analytical Charts */
-  --chart-1: oklch(0.48 0.22 258); /* Intelligence Blue */
-  --chart-2: oklch(0.62 0.19 160); /* Emerald Growth */
-  --chart-3: oklch(0.68 0.18 45);  /* Amber Alert */
-  --chart-4: oklch(0.55 0.21 300); /* Purple Strategic */
-  --chart-5: oklch(0.65 0.15 210); /* Cyan Tech */
+  /* Analytical Charts (Toned down, professional) */
+  --chart-1: #11110F; /* Primary Line */
+  --chart-2: #215732; /* Emerald Growth */
+  --chart-3: #8C5F12;  /* Amber Alert */
+  --chart-4: #4A3A69; /* Purple Strategic */
+  --chart-5: #1C5D6B; /* Cyan Tech */
 
-  /* Precision Border Radius: 8px default */
-  --radius: 0.5rem;
+  /* Precision Border Radius: 4px default for less bubbly editorial feel */
+  --radius: 0.25rem;
 
-  /* Signature Dark Navy Sidebar */
-  --sidebar: oklch(0.16 0.04 260);              /* Deep Midnight Navy #0B132B */
-  --sidebar-foreground: oklch(0.94 0.015 250);   /* Crisp Light Slate */
-  --sidebar-primary: oklch(0.55 0.22 258);      /* Vibrant Accent Blue */
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.23 0.05 260);       /* Subtle Hover Navy */
-  --sidebar-accent-foreground: oklch(0.99 0 0);
-  --sidebar-border: oklch(0.24 0.035 260);      /* Crisp Low-contrast Border */
-  --sidebar-ring: oklch(0.55 0.22 258);
+  /* Editorial Sidebar */
+  --sidebar: #11110F;              /* Deep Midnight Navy/Editorial Black */
+  --sidebar-foreground: #F5F2EA;   /* Crisp Light Ivory */
+  --sidebar-primary: #F5F2EA;
+  --sidebar-primary-foreground: #11110F;
+  --sidebar-accent: #2A2A28;       /* Subtle Hover Dark Grey */
+  --sidebar-accent-foreground: #F5F2EA;
+  --sidebar-border: #2A2A28;
+  --sidebar-ring: #F5F2EA;
 }
 
 .dark {
