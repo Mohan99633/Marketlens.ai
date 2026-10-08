@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141108"/>
+      <stop offset="50%" stop-color="#241E0D"/>
+      <stop offset="100%" stop-color="#0C0A05"/>
+    </linearGradient>
+    <linearGradient id="goldGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D9A400" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#D9A400" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#D9A400" stroke-width="0.75" stroke-opacity="0.15"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+
+  <!-- Radial Glow Behind Optical Switch -->
+  <circle cx="400" cy="225" r="230" fill="url(#goldGlow)"/>
+
+  <!-- Optical Circuit Switching (OCS) Fiber Ring & Torus Mesh -->
+  <ellipse cx="400" cy="225" rx="260" ry="140" fill="none" stroke="#D9A400" stroke-width="1.5" stroke-opacity="0.4" stroke-dasharray="6 4"/>
+  <ellipse cx="400" cy="225" rx="190" ry="100" fill="none" stroke="#4285F4" stroke-width="1.5" stroke-opacity="0.4" stroke-dasharray="4 4"/>
+
+  <!-- Optical Fiber Nodes -->
+  <g fill="#D9A400">
+    <circle cx="140" cy="225" r="5"/>
+    <circle cx="210" cy="125" r="5"/>
+    <circle cx="400" cy="85" r="5"/>
+    <circle cx="590" cy="125" r="5"/>
+    <circle cx="660" cy="225" r="5"/>
+    <circle cx="590" cy="325" r="5"/>
+    <circle cx="400" cy="365" r="5"/>
+    <circle cx="210" cy="325" r="5"/>
+  </g>
+
+  <!-- Central TPU v6 Trillium Die Package -->
+  <rect x="290" y="115" width="220" height="220" rx="16" fill="#1C180E" stroke="#D9A400" stroke-width="1.8" stroke-opacity="0.8"/>
+
+  <!-- TPU Core Matrix -->
+  <g fill="#2B2414" stroke="#D9A400" stroke-width="1">
+    <rect x="315" y="140" width="75" height="75" rx="6"/>
+    <rect x="410" y="140" width="75" height="75" rx="6"/>
+    <rect x="315" y="235" width="75" height="75" rx="6"/>
+    <rect x="410" y="235" width="75" height="75" rx="6"/>
+  </g>
+
+  <!-- Google 4-Color Accents -->
+  <circle cx="352" cy="177" r="7" fill="#4285F4"/>
+  <circle cx="447" cy="177" r="7" fill="#EA4335"/>
+  <circle cx="352" cy="272" r="7" fill="#34A853"/>
+  <circle cx="447" cy="272" r="7" fill="#FBBC05"/>
+
+  <!-- Optical Switch Core Emblem -->
+  <rect x="375" y="200" width="50" height="50" rx="6" fill="#141108" stroke="#D9A400" stroke-width="1.5"/>
+  <text x="400" y="230" fill="#FDE047" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">v6</text>
+
+  <!-- Labels -->
+  <text x="400" y="360" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="1">GOOGLE CLOUD TPU</text>
+  <text x="400" y="378" fill="#FDE047" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">TRILLIUM OPTICAL NETWORK</text>
+
+  <!-- Telemetry Badge (Bottom Left) -->
+  <rect x="40" y="385" width="230" height="30" rx="6" fill="#1C180E" stroke="#D9A400" stroke-width="1" stroke-opacity="0.3"/>
+  <circle cx="56" cy="400" r="4" fill="#D9A400"/>
+  <text x="70" y="404" fill="#E2E8F0" font-family="monospace" font-size="10" font-weight="bold">TPU v6 OPTICAL INTERCONNECT</text>
+  <text x="245" y="404" fill="#FDE047" font-family="monospace" font-size="9">4.7x</text>
+</svg>

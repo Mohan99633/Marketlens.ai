@@ -123,7 +123,6 @@ const SAMPLE_COMPANIES: SampleCompany[] = [
 export default function DesignSystemPage() {
   const [leonState, setLeonState] = useState<LeonAgentState>("Analyzing");
   const [connectionState, setConnectionState] = useState<ConnectionState>("Connected");
-  const [forceFallback, setForceFallback] = useState<boolean>(false);
   const [tableLoading, setTableLoading] = useState<boolean>(false);
   const [sampleData, setSampleData] = useState<SampleCompany[]>(SAMPLE_COMPANIES);
 
@@ -252,36 +251,26 @@ export default function DesignSystemPage() {
                 </h2>
               </div>
               <p className="text-xs text-muted-foreground max-w-3xl leading-relaxed">
-                2D-first layout hierarchy. Strict Three.js isolation with automatic fallback to high-fidelity SVG/Canvas.
-                Zero unhandled WebGL exceptions, off-screen animation pause, and respect for{" "}
+                High-performance vector architecture with responsive data tables, charts, and institutional warm ivory tokens.
+                Zero unhandled exceptions, fast rendering, and respect for{" "}
                 <code className="text-primary font-mono text-[11px] bg-primary/5 px-1 py-0.5 rounded">
                   prefers-reduced-motion
                 </code>.
               </p>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Button
-                variant={forceFallback ? "default" : "outline"}
-                size="sm"
-                onClick={() => setForceFallback(!forceFallback)}
-                className="text-xs font-semibold"
-              >
-                {forceFallback ? "2D Fallback Active" : "Testing 3D WebGL"}
-              </Button>
-            </div>
           </div>
         </div>
 
-        {/* Section 1: 3D Leon Intelligence Core & Agent State */}
+        {/* Section 1: Leon Cognitive Runtime & Agent State */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold tracking-tight text-foreground flex items-center gap-2">
                 <Sparkles className="size-4 text-primary" />
-                1. Leon Intelligence Core (3D + Fallback)
+                1. Leon Cognitive Runtime & Agent State
               </h3>
               <p className="text-xs text-muted-foreground">
-                State-driven dynamic core. Adapts rotation, frequency, and spectral luminosity to Leon&apos;s cognitive task.
+                State-driven dynamic core visualizing Leon&apos;s cognitive tasks and execution telemetry.
               </p>
             </div>
           </div>
@@ -290,7 +279,7 @@ export default function DesignSystemPage() {
             {/* Visual Core Display */}
             <div className="lg:col-span-5 rounded-xl border border-border/80 bg-card p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-xs">
               <div className="absolute top-3 left-3 text-[11px] font-mono text-muted-foreground">
-                MODE: {forceFallback ? "2D SVG FALLBACK" : "THREE.JS 3D CORE"}
+                STATUS: RUNTIME ACTIVE
               </div>
               <div className="absolute top-3 right-3">
                 <StatusBadge state={leonState} size="sm" />

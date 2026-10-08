@@ -6,12 +6,12 @@ export const MOCK_COMPANIES: Company[] = [
     ticker: "NVDA",
     name: "NVIDIA Corporation",
     sector: "Semiconductors & AI Compute",
-    marketCap: "$3.12T",
+    marketCap: "$3.21T",
     revenue: "$96.3B",
     revenueGrowth: "+122.4%",
     netIncome: "$53.2B",
-    stockPrice: "$128.45",
-    stockChange1M: "+14.2%",
+    stockPrice: "$1286.25",
+    stockChange1M: "+28.4%",
     status: "Monitored",
     aiScore: 94,
     pulse: {
@@ -85,12 +85,12 @@ export const MOCK_COMPANIES: Company[] = [
     ticker: "AMD",
     name: "Advanced Micro Devices",
     sector: "Semiconductors & Compute",
-    marketCap: "$248.5B",
+    marketCap: "$289B",
     revenue: "$25.7B",
     revenueGrowth: "+18.2%",
     netIncome: "$2.9B",
-    stockPrice: "$152.80",
-    stockChange1M: "+8.9%",
+    stockPrice: "$174.20",
+    stockChange1M: "+12.1%",
     status: "Analyzing",
     aiScore: 82,
     pulse: {
@@ -165,12 +165,12 @@ export const MOCK_COMPANIES: Company[] = [
     ticker: "INTC",
     name: "Intel Corporation",
     sector: "Semiconductors & Foundry",
-    marketCap: "$98.4B",
+    marketCap: "$129B",
     revenue: "$54.2B",
     revenueGrowth: "-3.8%",
     netIncome: "-$1.6B",
-    stockPrice: "$22.65",
-    stockChange1M: "-4.2%",
+    stockPrice: "$24.35",
+    stockChange1M: "-2.1%",
     status: "Monitored",
     aiScore: 68,
     pulse: {
@@ -243,12 +243,12 @@ export const MOCK_COMPANIES: Company[] = [
     ticker: "MSFT",
     name: "Microsoft Corporation",
     sector: "Enterprise Software & Cloud",
-    marketCap: "$3.05T",
+    marketCap: "$2.78T",
     revenue: "$245.1B",
     revenueGrowth: "+15.6%",
     netIncome: "$88.1B",
-    stockPrice: "$412.30",
-    stockChange1M: "+4.8%",
+    stockPrice: "$448.50",
+    stockChange1M: "+8.3%",
     status: "Monitored",
     aiScore: 91,
     pulse: {
@@ -314,12 +314,12 @@ export const MOCK_COMPANIES: Company[] = [
     ticker: "GOOGL",
     name: "Alphabet Inc.",
     sector: "AI Research & Cloud Infrastructure",
-    marketCap: "$2.15T",
+    marketCap: "$2.12T",
     revenue: "$318.4B",
     revenueGrowth: "+13.8%",
     netIncome: "$84.3B",
-    stockPrice: "$174.20",
-    stockChange1M: "+7.1%",
+    stockPrice: "$182.15",
+    stockChange1M: "+6.5%",
     status: "Idle",
     aiScore: 88,
     pulse: {
@@ -385,12 +385,12 @@ export const MOCK_COMPANIES: Company[] = [
     ticker: "AMZN",
     name: "Amazon.com, Inc.",
     sector: "Cloud Infrastructure & E-Commerce",
-    marketCap: "$1.95T",
+    marketCap: "$1.98T",
     revenue: "$590.2B",
     revenueGrowth: "+12.1%",
     netIncome: "$42.8B",
-    stockPrice: "$188.10",
-    stockChange1M: "+5.2%",
+    stockPrice: "$191.80",
+    stockChange1M: "+4.2%",
     status: "Monitored",
     aiScore: 86,
     pulse: {
@@ -450,3 +450,427 @@ export const MOCK_COMPANIES: Company[] = [
     },
   },
 ];
+
+export interface CompanyRow {
+  id: string;
+  ticker: string;
+  name: string;
+  sector: string;
+  marketCap: string;
+  change1D: number;
+  change1W: number;
+  change1M: number;
+  change3M: number;
+  change1Y: number;
+  status: "Monitored" | "Watchlist";
+  price: number;
+  description: string;
+}
+
+export const INSTITUTIONAL_COMPANIES: CompanyRow[] = [
+  {
+    id: "nvda",
+    ticker: "NVDA",
+    name: "NVIDIA Corporation",
+    sector: "Semiconductors",
+    marketCap: "$3.21T",
+    change1D: 2.4,
+    change1W: 6.8,
+    change1M: 28.4,
+    change3M: 45.2,
+    change1Y: 178.5,
+    status: "Monitored",
+    price: 1286.25,
+    description: "Dominant supplier of datacenter GPUs, CUDA acceleration software, and AI cluster networking infrastructure.",
+  },
+  {
+    id: "msft",
+    ticker: "MSFT",
+    name: "Microsoft Corporation",
+    sector: "Software & Cloud",
+    marketCap: "$2.78T",
+    change1D: 0.8,
+    change1W: 2.1,
+    change1M: 8.3,
+    change3M: 12.4,
+    change1Y: 28.7,
+    status: "Monitored",
+    price: 448.5,
+    description: "Global cloud platform (Azure) and enterprise AI provider with multi-billion commitments across OpenAI & custom silicon.",
+  },
+  {
+    id: "googl",
+    ticker: "GOOGL",
+    name: "Alphabet Inc.",
+    sector: "Internet & AI",
+    marketCap: "$2.12T",
+    change1D: 1.2,
+    change1W: 3.4,
+    change1M: 6.5,
+    change3M: 9.8,
+    change1Y: 34.2,
+    status: "Monitored",
+    price: 182.15,
+    description: "Full-stack AI leader developing proprietary TPUs, Gemini multimodal models, and Google Cloud AI infrastructure.",
+  },
+  {
+    id: "amzn",
+    ticker: "AMZN",
+    name: "Amazon.com, Inc.",
+    sector: "E-commerce & Cloud",
+    marketCap: "$1.98T",
+    change1D: 0.5,
+    change1W: 1.9,
+    change1M: 4.2,
+    change3M: 8.6,
+    change1Y: 42.1,
+    status: "Monitored",
+    price: 191.8,
+    description: "Market share leader in public cloud infrastructure via AWS, developing Trainium and Inferentia proprietary chips.",
+  },
+  {
+    id: "amd",
+    ticker: "AMD",
+    name: "Advanced Micro Devices",
+    sector: "Semiconductors",
+    marketCap: "$289B",
+    change1D: 3.1,
+    change1W: 4.8,
+    change1M: 12.1,
+    change3M: 18.7,
+    change1Y: 62.4,
+    status: "Monitored",
+    price: 174.2,
+    description: "Primary commercial challenger to NVIDIA in datacenter GPUs with Instinct MI300X/MI350 series and EPYC server CPUs.",
+  },
+  {
+    id: "intc",
+    ticker: "INTC",
+    name: "Intel Corporation",
+    sector: "Semiconductors",
+    marketCap: "$129B",
+    change1D: -0.9,
+    change1W: -1.5,
+    change1M: -2.1,
+    change3M: -8.4,
+    change1Y: -38.2,
+    status: "Watchlist",
+    price: 24.35,
+    description: "Executing complex turnaround focused on Intel Foundry Services (IFS) 18A node, Gaudi accelerators, and Xeon server CPUs.",
+  },
+];
+
+export interface CompanyProfileData {
+  id: string;
+  ticker: string;
+  name: string;
+  sector: string;
+  industryRank: string;
+  price: number;
+  change1D: number;
+  changeDollar: number;
+  marketCap: string;
+  peRatio: string;
+  eps: string;
+  range52W: string;
+  volume: string;
+  avgVolume: string;
+  dividendYield: string;
+  beta: string;
+  about: string;
+  website: string;
+  headquarters: string;
+  employees: string;
+  founded: string;
+  ceo: string;
+  competitors: { ticker: string; name: string; marketCap: string; change: number }[];
+  developments: {
+    id: string;
+    title: string;
+    category: string;
+    impact: "High" | "Medium" | "Low";
+    timeAgo: string;
+    summary: string;
+    imageUrl: string;
+  }[];
+  filings: { title: string; form: string; date: string }[];
+}
+
+export const COMPANY_PROFILES: Record<string, CompanyProfileData> = {
+  nvda: {
+    id: "nvda",
+    ticker: "NVDA",
+    name: "NVIDIA Corporation",
+    sector: "Semiconductors",
+    industryRank: "#1 in Semiconductors",
+    price: 1286.25,
+    change1D: 2.4,
+    changeDollar: 30.12,
+    marketCap: "$3.21T",
+    peRatio: "72.4x",
+    eps: "$17.76",
+    range52W: "$408.20 - $1,298.50",
+    volume: "42.8M",
+    avgVolume: "48.2M",
+    dividendYield: "0.03%",
+    beta: "1.68",
+    about:
+      "NVIDIA Corporation pioneers GPU-accelerated computing to power visual computing, high-performance computing (HPC), and artificial intelligence infrastructure globally. Its CUDA ecosystem remains the foundational software moat across global datacenters.",
+    website: "https://www.nvidia.com",
+    headquarters: "Santa Clara, California, USA",
+    employees: "29,600",
+    founded: "1993",
+    ceo: "Jensen Huang",
+    competitors: [
+      { ticker: "AMD", name: "Advanced Micro Devices", marketCap: "$289B", change: 3.1 },
+      { ticker: "INTC", name: "Intel Corporation", marketCap: "$129B", change: -0.9 },
+      { ticker: "MSFT", name: "Microsoft Corporation", marketCap: "$2.78T", change: 0.8 },
+    ],
+    developments: [
+      {
+        id: "intel_1843",
+        title: "NVIDIA announces Blackwell Ultra architecture roadmap with 30% performance boost",
+        category: "Technology",
+        impact: "High",
+        timeAgo: "2 hours ago",
+        summary: "New architecture promises substantial efficiency gains for large language model inference and training workloads.",
+        imageUrl: "/images/nvda-blackwell.svg",
+      },
+      {
+        id: "intel_1840",
+        title: "NVIDIA unveils custom NVLink 5.0 rack architecture for sovereign datacenter export compliance",
+        category: "Technology",
+        impact: "High",
+        timeAgo: "1 day ago",
+        summary: "Modified architecture complies with export regulations while maintaining 80% cluster scalability for European sovereign deployments.",
+        imageUrl: "/images/nvda-blackwell.svg",
+      },
+    ],
+    filings: [
+      { title: "Quarterly Report (Q3 2026)", form: "Form 10-Q", date: "Nov 20, 2026" },
+      { title: "Current Report: Sovereign Datacenter Sales Guidance", form: "Form 8-K", date: "Oct 06, 2026" },
+      { title: "Executive Beneficial Ownership Statement", form: "Form 4", date: "Sep 28, 2026" },
+    ],
+  },
+  amd: {
+    id: "amd",
+    ticker: "AMD",
+    name: "Advanced Micro Devices, Inc.",
+    sector: "Semiconductors",
+    industryRank: "#2 in Semiconductors",
+    price: 174.2,
+    change1D: 3.1,
+    changeDollar: 5.24,
+    marketCap: "$289B",
+    peRatio: "44.2x",
+    eps: "$3.94",
+    range52W: "$94.04 - $227.30",
+    volume: "52.4M",
+    avgVolume: "58.1M",
+    dividendYield: "N/A",
+    beta: "1.74",
+    about:
+      "Advanced Micro Devices designs high-performance computing, graphics, and visualization technologies. Its Instinct MI300X/MI350 accelerators are winning multi-billion hyperscaler contracts as alternatives to proprietary silicon.",
+    website: "https://www.amd.com",
+    headquarters: "Santa Clara, California, USA",
+    employees: "26,000",
+    founded: "1969",
+    ceo: "Dr. Lisa Su",
+    competitors: [
+      { ticker: "NVDA", name: "NVIDIA Corporation", marketCap: "$3.21T", change: 2.4 },
+      { ticker: "INTC", name: "Intel Corporation", marketCap: "$129B", change: -0.9 },
+    ],
+    developments: [
+      {
+        id: "intel_1842",
+        title: "AMD executes multi-year AI infrastructure partnership with Microsoft Azure for Instinct MI350",
+        category: "Partnership",
+        impact: "High",
+        timeAgo: "4 hours ago",
+        summary: "Microsoft contracts for multi-billion tier-1 deployment of MI350/MI400 series GPUs across global datacenters.",
+        imageUrl: "/images/amd-mi350.svg",
+      },
+    ],
+    filings: [
+      { title: "Quarterly Report (Q3 2026)", form: "Form 10-Q", date: "Oct 29, 2026" },
+      { title: "Material Definitive Agreement with Strategic Partner", form: "Form 8-K", date: "Oct 05, 2026" },
+    ],
+  },
+  msft: {
+    id: "msft",
+    ticker: "MSFT",
+    name: "Microsoft Corporation",
+    sector: "Software & Cloud",
+    industryRank: "#1 in Enterprise Software",
+    price: 448.5,
+    change1D: 0.8,
+    changeDollar: 3.56,
+    marketCap: "$2.78T",
+    peRatio: "35.8x",
+    eps: "$12.52",
+    range52W: "$366.50 - $468.35",
+    volume: "21.6M",
+    avgVolume: "24.2M",
+    dividendYield: "0.72%",
+    beta: "1.24",
+    about:
+      "Microsoft Corporation enables digital transformation for the era of an intelligent cloud and an intelligent edge. Azure OpenAI, enterprise Copilot seats, and custom Maia chips drive its enterprise moat.",
+    website: "https://www.microsoft.com",
+    headquarters: "Redmond, Washington, USA",
+    employees: "221,000",
+    founded: "1975",
+    ceo: "Satya Nadella",
+    competitors: [
+      { ticker: "GOOGL", name: "Alphabet Inc.", marketCap: "$2.12T", change: 1.2 },
+      { ticker: "AMZN", name: "Amazon.com Inc.", marketCap: "$1.98T", change: 0.5 },
+    ],
+    developments: [
+      {
+        id: "intel_1820",
+        title: "Microsoft accelerates custom silicon deployment across Azure datacenters",
+        category: "Strategy",
+        impact: "Medium",
+        timeAgo: "6 hours ago",
+        summary: "Maia 100 chips entering production clusters for internal Copilot workloads to reduce GPU dependency.",
+        imageUrl: "/images/msft-azure.svg",
+      },
+    ],
+    filings: [
+      { title: "Quarterly Report (Q1 FY27)", form: "Form 10-Q", date: "Oct 24, 2026" },
+      { title: "Current Report: Cloud Capex Guidance", form: "Form 8-K", date: "Sep 15, 2026" },
+    ],
+  },
+  googl: {
+    id: "googl",
+    ticker: "GOOGL",
+    name: "Alphabet Inc.",
+    sector: "Internet & AI",
+    industryRank: "#1 in Search & AI Research",
+    price: 182.15,
+    change1D: 1.2,
+    changeDollar: 2.18,
+    marketCap: "$2.12T",
+    peRatio: "24.6x",
+    eps: "$7.40",
+    range52W: "$131.55 - $193.31",
+    volume: "28.4M",
+    avgVolume: "31.0M",
+    dividendYield: "0.44%",
+    beta: "1.06",
+    about:
+      "Alphabet Inc. is a collection of businesses that includes Google, Google Cloud, and DeepMind. Its proprietary TPU infrastructure and Gemini multimodal models support global consumer and enterprise applications.",
+    website: "https://abc.xyz",
+    headquarters: "Mountain View, California, USA",
+    employees: "179,000",
+    founded: "1998",
+    ceo: "Sundar Pichai",
+    competitors: [
+      { ticker: "MSFT", name: "Microsoft Corporation", marketCap: "$2.78T", change: 0.8 },
+      { ticker: "AMZN", name: "Amazon.com Inc.", marketCap: "$1.98T", change: 0.5 },
+    ],
+    developments: [
+      {
+        id: "intel_1828",
+        title: "Google announces next-generation TPU v6 with enhanced optical interconnect",
+        category: "Product",
+        impact: "Low",
+        timeAgo: "8 hours ago",
+        summary: "TPU v6 Trillium enters general availability for enterprise customers with 4.7x compute density increase.",
+        imageUrl: "/images/googl-tpu.svg",
+      },
+    ],
+    filings: [
+      { title: "Quarterly Report (Q3 2026)", form: "Form 10-Q", date: "Oct 22, 2026" },
+      { title: "Current Report: Executive Compensation Updates", form: "Form 8-K", date: "Aug 18, 2026" },
+    ],
+  },
+  amzn: {
+    id: "amzn",
+    ticker: "AMZN",
+    name: "Amazon.com, Inc.",
+    sector: "E-commerce & Cloud",
+    industryRank: "#1 in Public Cloud (AWS)",
+    price: 191.8,
+    change1D: 0.5,
+    changeDollar: 0.95,
+    marketCap: "$1.98T",
+    peRatio: "42.8x",
+    eps: "$4.48",
+    range52W: "$144.05 - $201.20",
+    volume: "38.2M",
+    avgVolume: "44.5M",
+    dividendYield: "N/A",
+    beta: "1.18",
+    about:
+      "Amazon.com focuses on e-commerce, cloud computing (AWS), digital streaming, and artificial intelligence. AWS offers custom Trainium and Inferentia silicon alongside Amazon Bedrock multi-model hosting.",
+    website: "https://www.amazon.com",
+    headquarters: "Seattle, Washington, USA",
+    employees: "1,525,000",
+    founded: "1994",
+    ceo: "Andy Jassy",
+    competitors: [
+      { ticker: "MSFT", name: "Microsoft Corporation", marketCap: "$2.78T", change: 0.8 },
+      { ticker: "GOOGL", name: "Alphabet Inc.", marketCap: "$2.12T", change: 1.2 },
+    ],
+    developments: [
+      {
+        id: "intel_1822",
+        title: "AWS completes deployment of Trainium2 UltraClusters for enterprise customers",
+        category: "Product",
+        impact: "Medium",
+        timeAgo: "1 day ago",
+        summary: "Annapurna Labs silicon offers 40% price-performance gain over merchant GPUs for non-frontier model training.",
+        imageUrl: "/images/amzn-silicon.svg",
+      },
+    ],
+    filings: [
+      { title: "Quarterly Report (Q3 2026)", form: "Form 10-Q", date: "Oct 26, 2026" },
+      { title: "Current Report: Cloud Partnership Milestones", form: "Form 8-K", date: "Sep 09, 2026" },
+    ],
+  },
+  intc: {
+    id: "intc",
+    ticker: "INTC",
+    name: "Intel Corporation",
+    sector: "Semiconductors",
+    industryRank: "#3 in Semiconductors",
+    price: 24.35,
+    change1D: -0.9,
+    changeDollar: -0.22,
+    marketCap: "$129B",
+    peRatio: "28.1x",
+    eps: "$0.87",
+    range52W: "$18.51 - $51.28",
+    volume: "64.1M",
+    avgVolume: "55.8M",
+    dividendYield: "2.05%",
+    beta: "1.32",
+    about:
+      "Intel Corporation designs and manufactures essential technologies that power the world's devices. Its turnaround focuses on Intel Foundry Services (IFS) 18A manufacturing nodes and Xeon server processors.",
+    website: "https://www.intel.com",
+    headquarters: "Santa Clara, California, USA",
+    employees: "124,800",
+    founded: "1968",
+    ceo: "Pat Gelsinger",
+    competitors: [
+      { ticker: "NVDA", name: "NVIDIA Corporation", marketCap: "$3.21T", change: 2.4 },
+      { ticker: "AMD", name: "Advanced Micro Devices", marketCap: "$289B", change: 3.1 },
+    ],
+    developments: [
+      {
+        id: "intel_1825",
+        title: "Intel Foundry secures additional commercial packaging customer on 18A node",
+        category: "Technology",
+        impact: "High",
+        timeAgo: "2 days ago",
+        summary: "Defense contractor and sovereign compute provider sign manufacturing agreement for 18A tape-outs.",
+        imageUrl: "/images/intc-18a.svg",
+      },
+    ],
+    filings: [
+      { title: "Quarterly Report (Q3 2026)", form: "Form 10-Q", date: "Oct 24, 2026" },
+      { title: "Current Report: Foundry Reorganization Statement", form: "Form 8-K", date: "Sep 16, 2026" },
+    ],
+  },
+};
+

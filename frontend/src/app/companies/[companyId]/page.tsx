@@ -1,414 +1,493 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { AppShell, useAppShell } from "@/components/layout/AppShell";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SeverityBadge } from "@/components/shared/severity-badge";
-import { MetricCard } from "@/components/shared/metric-card";
-import { getCompanyById, getIntelligence } from "@/lib/mock";
-import { Company, IntelligenceItem } from "@/lib/types/models";
-import { getCompanyMedia } from "@/lib/media/company-images";
+import { CompanyLogo } from "@/components/shared/company-logo";
 import { SafeImage } from "@/components/shared/safe-image";
 import {
-  Scale,
-  Bot,
   ArrowLeft,
-  ShieldCheck,
-  Cpu,
-  ExternalLink,
-  Layers,
+  ArrowUpRight,
+  ArrowDownRight,
+  Check,
+  Sparkles,
+  Building2,
+  MapPin,
+  Users,
+  Calendar,
+  FileText,
+  ChevronRight,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+import { COMPANY_PROFILES } from "@/lib/mock";
+
+const TIMEFRAMES = ["1D", "1W", "1M", "3M", "6M", "1Y"];
+const TABS = ["Overview", "Financials", "Intelligence", "News", "Competitors", "Filings"];
 
 function CompanyDetailContent() {
   const params = useParams();
   const router = useRouter();
   const { askLeon } = useAppShell();
-  const companyId = (params?.companyId as string) || "nvda";
+  const companyKey = ((params?.companyId as string) || "nvda").toLowerCase();
 
-  const [company, setCompany] = useState<Company | null>(null);
-  const [relatedIntel, setRelatedIntel] = useState<IntelligenceItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const company = COMPANY_PROFILES[companyKey] || COMPANY_PROFILES.nvda;
 
-  useEffect(() => {
-    getCompanyById(companyId).then((comp) => {
-      setCompany(comp || null);
-      if (comp) {
-        getIntelligence().then((items) => {
-          setRelatedIntel(
-            items.filter(
-              (item) =>
-                item.companyTicker === comp.ticker ||
-                item.relatedCompanies.includes(comp.ticker)
-            )
-          );
-          setLoading(false);
-        });
-      } else {
-        setLoading(false);
-      }
-    });
-  }, [companyId]);
+  const [activeTab, setActiveTab] = useState("Overview");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("1M");
+  const [isFollowing, setIsFollowing] = useState(true);
 
-  if (loading) {
-    return (
-      <AppShell>
-        <div className="p-8 max-w-7xl mx-auto space-y-4">
-          <div className="h-8 w-48 bg-muted animate-pulse rounded-md" />
-          <div className="h-40 bg-muted/50 animate-pulse rounded-xl" />
-        </div>
-      </AppShell>
-    );
-  }
+  // 2D SVG Area Chart coordinates for 1M normalized trajectory
+  const points = [
+    { x: 30, y: 140, label: "$1,120" },
+    { x: 90, y: 132, label: "$1,145" },
+    { x: 160, y: 110, label: "$1,195" },
+    { x: 230, y: 115, label: "$1,180" },
+    { x: 300, y: 85, label: "$1,240" },
+    { x: 380, y: 65, label: "$1,270" },
+    { x: 450, y: 50, label: "$1,286" },
+  ];
 
-  if (!company) {
-    return (
-      <AppShell>
-        <div className="p-8 max-w-3xl mx-auto text-center space-y-4">
-          <h2 className="text-lg font-bold text-foreground">Company Entity Not Found</h2>
-          <p className="text-xs text-muted-foreground">
-            No intelligence dossier matches the ticker or identifier &quot;{companyId}&quot;.
-          </p>
-          <Button variant="outline" size="sm" onClick={() => router.push("/companies")}>
-            Back to Companies Portfolio
-          </Button>
-        </div>
-      </AppShell>
-    );
-  }
+  const pathD = `M ${points.map((p) => `${p.x},${p.y}`).join(" L ")}`;
+  const areaD = `${pathD} L 450,180 L 30,180 Z`;
 
   return (
     <AppShell>
-      <div className="p-4 md:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
-        {/* Navigation Breadcrumb & Back */}
-        <div className="flex items-center justify-between">
+      <div className="space-y-6">
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center justify-between text-xs text-[#77736B]">
+          <div className="flex items-center gap-1.5 font-medium">
+            <Link href="/companies" className="hover:text-[#11110F] transition-colors">
+              Companies
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-[#C9C4B9]" />
+            <span className="text-[#11110F] font-bold">{company.name}</span>
+          </div>
+
           <button
             onClick={() => router.push("/companies")}
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors font-medium"
+            className="inline-flex items-center gap-1 hover:text-[#11110F] transition-colors"
           >
-            <ArrowLeft className="size-3.5" /> Back to Companies Portfolio
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Companies</span>
           </button>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push("/comparison")}
-              className="text-xs h-8 gap-1.5"
-            >
-              <Scale className="size-3.5" /> Compare vs Rivals
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() =>
-                askLeon({
-                  type: "company",
-                  id: company.id,
-                  company: company.ticker,
-                  title: `${company.name} Comprehensive Dossier`,
-                })
-              }
-              className="text-xs h-8 gap-1.5 font-bold"
-            >
-              <Bot className="size-3.5" /> Ask Leon About {company.ticker}
-            </Button>
-          </div>
         </div>
 
-        {/* Company Header Card with Hero Banner */}
-        <div className="rounded-2xl border border-border/80 bg-card shadow-xs relative overflow-hidden">
-          {/* Real-world Hero Image Banner */}
-          <div className="w-full h-40 sm:h-48 relative overflow-hidden bg-slate-900">
-            <SafeImage
-              src={getCompanyMedia(company.ticker).hero}
-              alt={`${company.name} Technology Infrastructure`}
-              fallbackTicker={company.ticker}
-              enableHoverEffect={true}
-              className="w-full h-full"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent pointer-events-none" />
-            <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-xs text-white text-[11px] font-mono px-2.5 py-1 rounded border border-white/10">
-              Verified Primary Infrastructure
-            </div>
-          </div>
-
-          <div className="p-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div
-                  className="flex size-14 items-center justify-center rounded-xl font-mono text-xl font-black text-white shadow-xs shrink-0"
-                  style={{ backgroundColor: getCompanyMedia(company.ticker).brandColor }}
-                >
-                  {company.ticker}
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground font-mono">
-                      {company.name}
-                    </h1>
-                    <span className="rounded bg-muted px-2 py-0.5 font-mono text-xs font-semibold text-muted-foreground">
-                      {company.sector}
-                    </span>
-                    <SeverityBadge severity={company.pulse.threatLevel} size="sm" showIcon />
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
-                    {company.overview}
-                  </p>
-                </div>
+        {/* Company Header Card */}
+        <div className="bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 sm:p-6 shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+            {/* Left: Identity & Price */}
+            <div className="flex items-start sm:items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-[#FBFAF6] border border-[#DDD8CE] flex items-center justify-center p-2.5 shadow-xs">
+                <CompanyLogo ticker={company.ticker} size={36} />
               </div>
 
-              <div className="text-right shrink-0 border-t md:border-t-0 pt-3 md:pt-0">
-                <div className="text-2xl font-black font-mono text-foreground">
-                  {company.stockPrice}
-                </div>
-                <span
-                  className={`font-mono text-xs font-bold ${
-                    company.stockChange1M.startsWith("+")
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-rose-600 dark:text-rose-400"
-                  }`}
-                >
-                  {company.stockChange1M} past 30 days
-                </span>
-                <div className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                  CAP: {company.marketCap} • REV: {company.revenue}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3D Company Intelligence Network Card */}
-        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-xs space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-            <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-blue-600" />
-              <h2 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-800">
-                3D Company Intelligence Network ({company.ticker})
-              </h2>
-            </div>
-            <span className="text-[10px] font-mono text-slate-400">
-              Interactive relationship cluster: Moats • Products • Supply Chain • Competitors
-            </span>
-          </div>
-        </div>
-
-        {/* 1. VERIFIED FACTS & FINANCIAL CORE */}
-        <section className="space-y-3">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="size-4 text-emerald-600" />
-            <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              [VERIFIED MARKET DATA] Financials & Performance
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <MetricCard
-              label="Market Capitalization"
-              value={company.marketCap}
-              description="Current enterprise value"
-            />
-            <MetricCard
-              label="Annual Revenue"
-              value={company.revenue}
-              delta={{ value: company.revenueGrowth, trend: "up", label: "YoY" }}
-              description="Trailing twelve months"
-            />
-            <MetricCard
-              label="Net Operating Income"
-              value={company.netIncome}
-              description="Reported GAAP earnings"
-            />
-            <MetricCard
-              label="Latest R&D Capex"
-              value={company.financials[0]?.rdExpense || "$2.5B"}
-              description="Quarterly R&D deployment"
-            />
-          </div>
-        </section>
-
-        {/* 2. LEON AI ASSESSMENT & COMPETITIVE PULSE (CLEARLY SEPARATED) */}
-        <section className="rounded-2xl border border-primary/30 bg-primary/5 p-6 space-y-6 shadow-xs relative">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-primary/20 pb-4">
-            <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
-                <Bot className="size-4" />
-              </div>
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
-                  [LEON ASSESSMENT] AI Competitive Pulse & Threat Evaluation
-                </h2>
-                <p className="text-[11px] text-muted-foreground">
-                  Autonomous synthesis generated by Hermes Agent • Factual confidence: {Math.round(company.leonAssessment.confidence * 100)}%
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#11110F]">
+                    {company.name}
+                  </h1>
+                  <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#E8E4DB] text-[#4B4840]">
+                    {company.ticker}
+                  </span>
+                  <button
+                    onClick={() => setIsFollowing(!isFollowing)}
+                    className={cn(
+                      "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold transition-colors",
+                      isFollowing
+                        ? "bg-[#E7F3E8] text-[#16803C] border border-[#A5D6A7]"
+                        : "bg-[#E8E4DB] text-[#4B4840]"
+                    )}
+                  >
+                    <Check className="w-3 h-3" />
+                    <span>{isFollowing ? "Following" : "Follow"}</span>
+                  </button>
+                </div>
+
+                <div className="flex items-baseline gap-3 mt-2 flex-wrap">
+                  <span className="text-2xl font-bold font-mono text-[#11110F]">
+                    ${company.price.toFixed(2)}
+                  </span>
+                  <span
+                    className={cn(
+                      "font-mono font-bold text-sm flex items-center",
+                      company.change1D >= 0 ? "text-[#16803C]" : "text-[#C62828]"
+                    )}
+                  >
+                    {company.change1D >= 0 ? (
+                      <ArrowUpRight className="w-4 h-4 inline" />
+                    ) : (
+                      <ArrowDownRight className="w-4 h-4 inline" />
+                    )}
+                    +{company.change1D.toFixed(1)}% (+${company.changeDollar.toFixed(2)})
+                  </span>
+                  <span className="text-xs text-[#77736B] font-mono">
+                    {company.marketCap} Market Cap
+                  </span>
+                  <span className="text-xs text-[#77736B] font-medium">
+                    · {company.industryRank}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() =>
+                  askLeon({
+                    type: "company",
+                    company: company.name,
+                    title: `${company.ticker} Executive Briefing`,
+                    summary: company.about,
+                  })
+                }
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[#11110F] text-[#F8F6F0] hover:bg-[#33312B] transition-colors shadow-xs"
+              >
+                <Sparkles className="w-4 h-4 text-[#F8F6F0]" />
+                <span>Ask Leon</span>
+              </button>
+
+              <Link
+                href="/comparison"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#E8E4DB] text-[#11110F] hover:bg-[#DDD8CE] transition-colors border border-[#DDD8CE]"
+              >
+                <span>Compare vs Rivals</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="flex items-center gap-1 mt-6 border-b border-[#DDD8CE] overflow-x-auto scrollbar-none">
+            {TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={cn(
+                  "px-4 py-2.5 text-xs font-semibold whitespace-nowrap transition-colors border-b-2 -mb-[1px]",
+                  activeTab === tab
+                    ? "border-[#11110F] text-[#11110F]"
+                    : "border-transparent text-[#77736B] hover:text-[#11110F]"
+                )}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* TOP 3-COLUMN LAYOUT (Stock Price / Key Metrics / Company Info) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* Column 1: Stock Price Chart (5 cols) */}
+          <div className="lg:col-span-5 bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 flex flex-col justify-between shadow-sm">
+            <div>
+              <div className="flex items-center justify-between pb-3 border-b border-[#DDD8CE]">
+                <div>
+                  <h3 className="text-sm font-bold text-[#11110F]">Stock Price</h3>
+                  <p className="text-[11px] text-[#77736B]">1-Month trajectory & trading range</p>
+                </div>
+
+                {/* Timeframe selector */}
+                <div className="flex items-center gap-1 bg-[#E8E4DB] p-1 rounded-lg">
+                  {TIMEFRAMES.map((tf) => (
+                    <button
+                      key={tf}
+                      onClick={() => setSelectedTimeframe(tf)}
+                      className={cn(
+                        "px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all",
+                        selectedTimeframe === tf
+                          ? "bg-[#11110F] text-[#F8F6F0]"
+                          : "text-[#77736B] hover:text-[#11110F]"
+                      )}
+                    >
+                      {tf}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 2D SVG Area Chart */}
+              <div className="mt-4 w-full h-44 relative">
+                <svg viewBox="0 0 480 200" className="w-full h-full overflow-visible">
+                  <defs>
+                    <linearGradient id="nvdaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#16803C" stopOpacity="0.28" />
+                      <stop offset="100%" stopColor="#16803C" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Horizontal Gridlines */}
+                  <line x1="30" y1="50" x2="450" y2="50" stroke="#DDD8CE" strokeDasharray="3 3" />
+                  <line x1="30" y1="100" x2="450" y2="100" stroke="#DDD8CE" strokeDasharray="3 3" />
+                  <line x1="30" y1="150" x2="450" y2="150" stroke="#DDD8CE" strokeDasharray="3 3" />
+
+                  {/* Area fill */}
+                  <path d={areaD} fill="url(#nvdaGrad)" />
+
+                  {/* Stroke path */}
+                  <path
+                    d={pathD}
+                    fill="none"
+                    stroke="#16803C"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* End coordinate pulse circle */}
+                  <circle cx="450" cy="50" r="4.5" fill="#16803C" stroke="#F8F6F0" strokeWidth="2" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#77736B] pt-2 border-t border-[#DDD8CE]">
+              <span>Low: $1,104.20</span>
+              <span className="font-bold text-[#16803C]">+28.4% (30-Day Gain)</span>
+              <span>High: $1,298.50</span>
+            </div>
+          </div>
+
+          {/* Column 2: Key Metrics (4 cols) */}
+          <div className="lg:col-span-4 bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 shadow-sm space-y-3">
+            <h3 className="text-sm font-bold text-[#11110F] pb-2 border-b border-[#DDD8CE]">
+              Key Metrics
+            </h3>
+
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">Market Cap</span>
+                <p className="font-mono font-bold text-[#11110F] text-sm mt-0.5">
+                  {company.marketCap}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">P/E Ratio</span>
+                <p className="font-mono font-bold text-[#11110F] text-sm mt-0.5">
+                  {company.peRatio}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">EPS (TTM)</span>
+                <p className="font-mono font-bold text-[#11110F] text-sm mt-0.5">
+                  {company.eps}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">Beta</span>
+                <p className="font-mono font-bold text-[#11110F] text-sm mt-0.5">
+                  {company.beta}
+                </p>
+              </div>
+
+              <div className="col-span-2">
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">52-Week Range</span>
+                <p className="font-mono font-bold text-[#11110F] text-xs mt-0.5">
+                  {company.range52W}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">Volume</span>
+                <p className="font-mono font-semibold text-[#11110F] text-xs mt-0.5">
+                  {company.volume}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#77736B]">Avg. Volume</span>
+                <p className="font-mono font-semibold text-[#11110F] text-xs mt-0.5">
+                  {company.avgVolume}
                 </p>
               </div>
             </div>
-            <div className="font-mono text-xs font-bold px-2.5 py-1 rounded bg-card text-foreground border border-border/80">
-              AI SCORE: {company.aiScore} / 100
-            </div>
           </div>
 
-          {/* Pulse Sub-Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="rounded-xl bg-card p-3 border border-border/80">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground">Strategic Moat</span>
-              <div className="font-mono text-lg font-bold text-foreground mt-0.5">
-                {company.pulse.marketPower} <span className="text-xs text-muted-foreground">/100</span>
-              </div>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Tier-1 Monopoly Power</span>
+          {/* Column 3: Company Info (3 cols) */}
+          <div className="lg:col-span-3 bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 shadow-sm space-y-3 flex flex-col justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-[#11110F] pb-2 border-b border-[#DDD8CE]">
+                About {company.ticker}
+              </h3>
+
+              <p className="text-xs text-[#4B4840] leading-relaxed mt-2 line-clamp-4">
+                {company.about}
+              </p>
             </div>
-            <div className="rounded-xl bg-card p-3 border border-border/80">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground">Innovation Velocity</span>
-              <div className="font-mono text-lg font-bold text-foreground mt-0.5">
-                {company.pulse.innovation} <span className="text-xs text-muted-foreground">/100</span>
+
+            <div className="space-y-2 pt-2 border-t border-[#DDD8CE] text-xs text-[#77736B]">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5" /> HQ
+                </span>
+                <span className="font-medium text-[#11110F] text-right truncate max-w-[130px]">
+                  {company.headquarters}
+                </span>
               </div>
-              <span className="text-[10px] text-muted-foreground">High patent output</span>
-            </div>
-            <div className="rounded-xl bg-card p-3 border border-border/80">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground">Tech Strength</span>
-              <div className="font-mono text-lg font-bold text-foreground mt-0.5">
-                {company.pulse.technologyStrength} <span className="text-xs text-muted-foreground">/100</span>
+
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5" /> Employees
+                </span>
+                <span className="font-medium text-[#11110F]">{company.employees}</span>
               </div>
-              <span className="text-[10px] text-muted-foreground">Custom ASIC & IP</span>
-            </div>
-            <div className="rounded-xl bg-card p-3 border border-border/80">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground">Momentum Trajectory</span>
-              <div className="font-mono text-lg font-bold text-foreground mt-0.5">
-                {company.pulse.momentum}
+
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" /> Founded
+                </span>
+                <span className="font-medium text-[#11110F]">{company.founded}</span>
               </div>
-              <span className="text-[10px] text-primary font-semibold">Positive vector</span>
+
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5" /> CEO
+                </span>
+                <span className="font-medium text-[#11110F]">{company.ceo}</span>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Detailed Leon Synthesis Blocks */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div className="rounded-xl bg-card p-4 border border-border/80 space-y-1.5">
-              <span className="font-mono text-[10px] uppercase font-bold text-primary">Strategic Moat Assessment</span>
-              <p className="text-muted-foreground leading-relaxed">
-                {company.leonAssessment.strategicMoat}
-              </p>
+        {/* BOTTOM 2-COLUMN LAYOUT (Recent Developments / Competitors + Filings) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          {/* Left Col (8 cols): Recent Developments */}
+          <div className="lg:col-span-8 bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-[#DDD8CE] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-[#11110F]">Recent Developments</h3>
+                <p className="text-xs text-[#77736B]">Verified intelligence across public and sovereign filings</p>
+              </div>
+
+              <Link
+                href="/intelligence"
+                className="text-xs font-semibold text-[#11110F] hover:text-[#4B4840]"
+              >
+                View All →
+              </Link>
             </div>
-            <div className="rounded-xl bg-card p-4 border border-border/80 space-y-1.5">
-              <span className="font-mono text-[10px] uppercase font-bold text-rose-600 dark:text-rose-400">Critical Vulnerability</span>
-              <p className="text-muted-foreground leading-relaxed">
-                {company.leonAssessment.keyVulnerability}
-              </p>
-            </div>
-            <div className="rounded-xl bg-card p-4 border border-border/80 space-y-1.5">
-              <span className="font-mono text-[10px] uppercase font-bold text-foreground">18-Month Outlook</span>
-              <p className="text-muted-foreground leading-relaxed">
-                {company.leonAssessment.outlook}
-              </p>
-            </div>
-          </div>
-        </section>
 
-        {/* 3. DOSSIER TABS: Products, Technology, Financials, Partnerships */}
-        <section className="space-y-4">
-          <Tabs defaultValue="products" className="w-full">
-            <TabsList className="grid grid-cols-4 w-full max-w-xl">
-              <TabsTrigger value="products">Products</TabsTrigger>
-              <TabsTrigger value="technology">Technology</TabsTrigger>
-              <TabsTrigger value="financials">Quarterly Trend</TabsTrigger>
-              <TabsTrigger value="partnerships">Partnerships</TabsTrigger>
-            </TabsList>
-
-            {/* Products Tab */}
-            <TabsContent value="products" className="pt-4">
-              <div className="rounded-xl border border-border/80 bg-card overflow-hidden divide-y divide-border/60">
-                {company.products.map((p, i) => (
-                  <div key={i} className="p-3.5 flex items-center justify-between">
-                    <div>
-                      <h4 className="font-bold text-xs text-foreground">{p.name}</h4>
-                      <span className="text-[11px] text-muted-foreground">{p.category}</span>
-                    </div>
-                    <div className="text-right font-mono">
-                      <span className="text-xs font-bold text-foreground">{p.marketShare}</span>
-                      <div className="text-[10px] text-muted-foreground">Market Share</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Technology Tab */}
-            <TabsContent value="technology" className="pt-4">
-              <div className="rounded-xl border border-border/80 bg-card p-4 space-y-2">
-                {company.technology.map((tech, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs p-2 rounded-lg bg-muted/30">
-                    <Cpu className="size-4 text-primary shrink-0" />
-                    <span className="font-medium text-foreground">{tech}</span>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Financials Tab */}
-            <TabsContent value="financials" className="pt-4">
-              <div className="rounded-xl border border-border/80 bg-card overflow-hidden divide-y divide-border/60 font-mono text-xs">
-                {company.financials.map((f, i) => (
-                  <div key={i} className="p-3.5 flex items-center justify-between">
-                    <span className="font-bold text-foreground">{f.quarter}</span>
-                    <span>Revenue: {f.revenue}</span>
-                    <span>Op. Margin: {f.operatingMargin}</span>
-                    <span>R&D: {f.rdExpense}</span>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Partnerships Tab */}
-            <TabsContent value="partnerships" className="pt-4">
-              <div className="rounded-xl border border-border/80 bg-card overflow-hidden divide-y divide-border/60">
-                {company.partnerships.map((part, i) => (
-                  <div key={i} className="p-3.5 flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-bold text-foreground">{part.partner}</span>
-                      <p className="text-muted-foreground mt-0.5">{part.scope}</p>
-                    </div>
-                    <span className="font-mono text-[11px] text-muted-foreground shrink-0 ml-4">
-                      {part.date}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </section>
-
-        {/* 4. ACTIVE INTELLIGENCE FEED FOR THIS COMPANY */}
-        {relatedIntel.length > 0 && (
-          <section className="space-y-3">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Recent Verified Intelligence Related to {company.ticker}
-            </h2>
-            <div className="space-y-2.5">
-              {relatedIntel.map((item) => (
+            <div className="space-y-3">
+              {company.developments.map((dev) => (
                 <div
-                  key={item.id}
-                  className="rounded-xl border border-border/80 bg-card p-4 flex items-center justify-between hover:border-primary/40 transition-colors"
+                  key={dev.id}
+                  className="p-4 rounded-xl bg-[#FBFAF6] border border-[#DDD8CE] flex flex-col sm:flex-row gap-4 items-start hover:border-[#11110F] transition-all"
                 >
-                  <div className="space-y-1 pr-4">
-                    <div className="flex items-center gap-2">
-                      <SeverityBadge severity={item.impact} size="sm" />
-                      <span className="font-bold text-xs text-foreground">{item.title}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground line-clamp-1">{item.summary}</p>
+                  <div className="w-full sm:w-28 h-24 rounded-lg bg-[#E8E4DB] shrink-0 overflow-hidden relative">
+                    <SafeImage
+                      src={dev.imageUrl}
+                      alt={dev.title}
+                      fallbackTicker={company.ticker}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    onClick={() => router.push(`/intelligence/${item.id}`)}
-                    className="shrink-0 text-xs h-7"
-                  >
-                    Examine <ExternalLink className="size-3 ml-1" />
-                  </Button>
+
+                  <div className="flex-1 space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E7F3E8] text-[#16803C]">
+                        [{dev.impact}]
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#E8E4DB] text-[#4B4840]">
+                        {dev.category}
+                      </span>
+                      <span className="text-[10px] text-[#77736B]">{dev.timeAgo}</span>
+                    </div>
+
+                    <h4 className="text-sm font-bold text-[#11110F] leading-snug">
+                      {dev.title}
+                    </h4>
+
+                    <p className="text-xs text-[#4B4840] line-clamp-2 leading-relaxed">
+                      {dev.summary}
+                    </p>
+
+                    <div className="pt-1">
+                      <Link
+                        href={`/intelligence/${dev.id}`}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#11110F] hover:text-[#4B4840]"
+                      >
+                        <span>View Intelligence</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+
+          {/* Right Col (4 cols): Competitors + Filings */}
+          <div className="lg:col-span-4 space-y-5">
+            {/* Competitors Card */}
+            <div className="bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 shadow-sm space-y-3">
+              <div className="flex items-center justify-between border-b border-[#DDD8CE] pb-2">
+                <h3 className="text-sm font-bold text-[#11110F]">Key Competitors</h3>
+                <Link href="/comparison" className="text-xs font-semibold text-[#11110F]">
+                  Matrix →
+                </Link>
+              </div>
+
+              <div className="space-y-2">
+                {company.competitors.map((comp) => (
+                  <Link
+                    key={comp.ticker}
+                    href={`/companies/${comp.ticker.toLowerCase()}`}
+                    className="p-2.5 rounded-lg bg-[#FBFAF6] border border-[#DDD8CE] flex items-center justify-between text-xs hover:border-[#11110F] transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <CompanyLogo ticker={comp.ticker} size={20} />
+                      <div>
+                        <div className="font-bold text-[#11110F]">{comp.ticker}</div>
+                        <div className="text-[10px] text-[#77736B]">{comp.marketCap}</div>
+                      </div>
+                    </div>
+
+                    <span
+                      className={cn(
+                        "font-mono font-bold text-xs",
+                        comp.change >= 0 ? "text-[#16803C]" : "text-[#C62828]"
+                      )}
+                    >
+                      {comp.change >= 0 ? "+" : ""}
+                      {comp.change.toFixed(1)}%
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Filings Card */}
+            <div className="bg-[#F8F6F0] rounded-xl border border-[#DDD8CE] p-5 shadow-sm space-y-3">
+              <div className="flex items-center justify-between border-b border-[#DDD8CE] pb-2">
+                <h3 className="text-sm font-bold text-[#11110F]">Recent Filings</h3>
+                <span className="text-[10px] font-mono text-[#77736B]">SEC EDGAR</span>
+              </div>
+
+              <div className="space-y-2">
+                {company.filings.map((filing, idx) => (
+                  <div
+                    key={idx}
+                    className="p-2.5 rounded-lg bg-[#FBFAF6] border border-[#DDD8CE] flex items-start gap-2.5 text-xs"
+                  >
+                    <FileText className="w-4 h-4 text-[#77736B] shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-[#11110F] leading-tight truncate">
+                        {filing.title}
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-[#77736B] mt-1 font-mono">
+                        <span className="font-bold text-[#4B4840]">{filing.form}</span>
+                        <span>{filing.date}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </AppShell>
   );
@@ -418,8 +497,8 @@ export default function CompanyDetailPage() {
   return (
     <React.Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center text-xs text-slate-500">
-          Loading company profile...
+        <div className="min-h-screen bg-[#F2EFE7] flex items-center justify-center text-xs text-[#77736B]">
+          Loading company dossier...
         </div>
       }
     >

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140E0A"/>
+      <stop offset="50%" stop-color="#24160E"/>
+      <stop offset="100%" stop-color="#0C0805"/>
+    </linearGradient>
+    <linearGradient id="rackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1612"/>
+      <stop offset="100%" stop-color="#0E0B08"/>
+    </linearGradient>
+    <linearGradient id="orangeGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E97817" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#E97817" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E97817" stroke-width="0.75" stroke-opacity="0.15"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+
+  <!-- Radial Glow Behind Racks -->
+  <circle cx="400" cy="225" r="230" fill="url(#orangeGlow)"/>
+
+  <!-- Server Rack Perspective Corridor -->
+  <!-- Left Server Rack Bay -->
+  <path d="M 80 50 L 260 120 L 260 330 L 80 400 Z" fill="url(#rackGrad)" stroke="#E97817" stroke-width="1.5" stroke-opacity="0.5"/>
+  <!-- Left Rack Unit Lines & LEDs -->
+  <g stroke="#E97817" stroke-width="1" stroke-opacity="0.3">
+    <line x1="100" y1="100" x2="240" y2="150"/>
+    <line x1="100" y1="150" x2="240" y2="185"/>
+    <line x1="100" y1="200" x2="240" y2="220"/>
+    <line x1="100" y1="250" x2="240" y2="255"/>
+    <line x1="100" y1="300" x2="240" y2="290"/>
+    <line x1="100" y1="350" x2="240" y2="325"/>
+  </g>
+  <circle cx="230" cy="150" r="2.5" fill="#22C55E"/>
+  <circle cx="230" cy="185" r="2.5" fill="#E97817"/>
+  <circle cx="230" cy="220" r="2.5" fill="#22C55E"/>
+  <circle cx="230" cy="255" r="2.5" fill="#38BDF8"/>
+
+  <!-- Right Server Rack Bay -->
+  <path d="M 720 50 L 540 120 L 540 330 L 720 400 Z" fill="url(#rackGrad)" stroke="#E97817" stroke-width="1.5" stroke-opacity="0.5"/>
+  <!-- Right Rack Unit Lines & LEDs -->
+  <g stroke="#E97817" stroke-width="1" stroke-opacity="0.3">
+    <line x1="700" y1="100" x2="560" y2="150"/>
+    <line x1="700" y1="150" x2="560" y2="185"/>
+    <line x1="700" y1="200" x2="560" y2="220"/>
+    <line x1="700" y1="250" x2="560" y2="255"/>
+    <line x1="700" y1="300" x2="560" y2="290"/>
+    <line x1="700" y1="350" x2="560" y2="325"/>
+  </g>
+  <circle cx="570" cy="150" r="2.5" fill="#22C55E"/>
+  <circle cx="570" cy="185" r="2.5" fill="#E97817"/>
+  <circle cx="570" cy="220" r="2.5" fill="#38BDF8"/>
+  <circle cx="570" cy="255" r="2.5" fill="#22C55E"/>
+
+  <!-- Center Maia 100 Accelerator Blade Focus -->
+  <rect x="310" y="115" width="180" height="220" rx="12" fill="#18120D" stroke="#E97817" stroke-width="1.5" stroke-opacity="0.7"/>
+
+  <!-- Maia Silicon Core -->
+  <rect x="345" y="150" width="110" height="110" rx="8" fill="#241912" stroke="#E97817" stroke-width="1.2"/>
+  <rect x="365" y="170" width="70" height="70" rx="4" fill="#E97817" fill-opacity="0.2" stroke="#E97817" stroke-width="1"/>
+
+  <!-- Microsoft 4-Color Mark in Silicon -->
+  <g transform="translate(388, 193) scale(0.9)">
+    <rect x="0" y="0" width="11" height="11" fill="#F25022"/>
+    <rect x="14" y="0" width="11" height="11" fill="#7FBA00"/>
+    <rect x="0" y="14" width="11" height="11" fill="#00A4EF"/>
+    <rect x="14" y="14" width="11" height="11" fill="#FFB900"/>
+  </g>
+
+  <!-- Labels -->
+  <text x="400" y="285" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="1">MICROSOFT AZURE</text>
+  <text x="400" y="303" fill="#FDBA74" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">MAIA 100 AI SILICON</text>
+
+  <!-- Telemetry Badge (Bottom Left) -->
+  <rect x="40" y="385" width="220" height="30" rx="6" fill="#18120D" stroke="#E97817" stroke-width="1" stroke-opacity="0.3"/>
+  <circle cx="56" cy="400" r="4" fill="#E97817"/>
+  <text x="70" y="404" fill="#E2E8F0" font-family="monospace" font-size="10" font-weight="bold">AZURE HYPERSCALE CLOUD</text>
+  <text x="235" y="404" fill="#FDBA74" font-family="monospace" font-size="9">105B Tr</text>
+</svg>

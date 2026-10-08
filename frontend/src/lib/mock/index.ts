@@ -58,6 +58,14 @@ export async function getAgentWatchers() {
   return [...MOCK_WATCHERS];
 }
 
+export {
+  MOCK_COMPANIES,
+  INSTITUTIONAL_COMPANIES,
+  type CompanyRow,
+  COMPANY_PROFILES,
+  type CompanyProfileData,
+} from "./companies";
+
 export { getSimulatedLeonResponse };
 
 export async function searchGlobal(query: string): Promise<SearchResult[]> {

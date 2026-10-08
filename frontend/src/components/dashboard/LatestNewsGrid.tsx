@@ -1,163 +1,244 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { IntelligenceItem } from "@/lib/types/models";
-import { getIntelligence } from "@/lib/mock";
-import { getIntelligenceMedia } from "@/lib/media/intelligence-images";
+import { useAppShell } from "@/components/layout/AppShell";
 import { SafeImage } from "@/components/shared/safe-image";
-import { CategoryBadge } from "@/components/shared/category-badge";
-import { SeverityBadge } from "@/components/shared/severity-badge";
-import {
-  Sparkles,
-  ArrowRight,
-  Clock,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowRight, Sparkles, MessageSquare } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface NewsCardItem {
+  id: string;
+  ticker: string;
+  companyName: string;
+  impact: "High" | "Medium" | "Low";
+  category: string;
+  timeAgo: string;
+  title: string;
+  summary: string;
+  whyItMatters: string;
+  leonAssessment: string;
+  imageUrl: string;
+}
+
+const FEATURED_NEWS: NewsCardItem[] = [
+  {
+    id: "intel_1843",
+    ticker: "NVDA",
+    companyName: "NVIDIA",
+    impact: "High",
+    category: "Technology",
+    timeAgo: "2 hours ago",
+    title: "NVIDIA announces Blackwell Ultra architecture roadmap with 30% performance boost",
+    summary:
+      "New architecture promises substantial efficiency gains for large language model inference and training workloads.",
+    whyItMatters:
+      "Solidifies NVIDIA's 80%+ datacenter AI GPU moat while raising barrier for AMD and custom ASIC silicon.",
+    leonAssessment: "Expect hyperscalers to commit upfront capex ahead of H2 2025 rollout.",
+    imageUrl: "/images/nvda-blackwell.svg",
+  },
+  {
+    id: "intel_1842",
+    ticker: "AMD",
+    companyName: "AMD",
+    impact: "Medium",
+    category: "Partnership",
+    timeAgo: "4 hours ago",
+    title: "AMD expands cloud partnerships for MI300X accelerator deployments",
+    summary:
+      "Tier-2 hyperscalers and European sovereign cloud providers sign multi-year cluster agreements.",
+    whyItMatters:
+      "Validates ROCm software stack maturity and offers competitive alternative to CUDA vendor lock-in.",
+    leonAssessment: "Pricing pressure on mid-tier inference may accelerate adoption across non-frontier models.",
+    imageUrl: "/images/amd-mi350.svg",
+  },
+  {
+    id: "intel_1820",
+    ticker: "MSFT",
+    companyName: "Microsoft",
+    impact: "Medium",
+    category: "Strategy",
+    timeAgo: "6 hours ago",
+    title: "Microsoft accelerates custom silicon deployment across Azure datacenters",
+    summary:
+      "Maia 100 chips entering production clusters for internal Copilot workloads to reduce GPU dependency.",
+    whyItMatters:
+      "Direct attempt to compress gross margin pressure from external chip procurement.",
+    leonAssessment: "Near-term NVIDIA volume remains intact, but creates long-term margin cap.",
+    imageUrl: "/images/msft-azure.svg",
+  },
+  {
+    id: "intel_1828",
+    ticker: "GOOGL",
+    companyName: "Google",
+    impact: "Low",
+    category: "Product",
+    timeAgo: "8 hours ago",
+    title: "Google announces next-generation TPU v6 with enhanced optical interconnect",
+    summary:
+      "TPU v6 Trillium enters general availability for enterprise customers with 4.7x compute density increase.",
+    whyItMatters:
+      "Provides Google Cloud with proprietary cost-performance advantage against generic hyperscalers.",
+    leonAssessment: "Internal workload efficiency continues to decouple Google from merchant GPU supply.",
+    imageUrl: "/images/googl-tpu.svg",
+  },
+];
 
 export function LatestNewsGrid() {
   const router = useRouter();
-  const [items, setItems] = useState<IntelligenceItem[]>([]);
-  const [lastUpdatedSec, setLastUpdatedSec] = useState(18);
-
-  useEffect(() => {
-    getIntelligence().then((data) => {
-      setItems(data.slice(0, 6)); // Top 6 high-impact developments
-    });
-
-    const timer = setInterval(() => {
-      setLastUpdatedSec((prev) => (prev > 60 ? 12 : prev + 3));
-    }, 3000);
-
-    return () => clearInterval(timer);
-  }, []);
+  const { askLeon } = useAppShell();
+  const [news] = useState<NewsCardItem[]>(FEATURED_NEWS);
 
   return (
     <section className="space-y-4">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold tracking-tight text-foreground">
-              LATEST NEWS & INTELLIGENCE
-            </h2>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-muted text-muted-foreground border border-border">
-              Simulated Feed
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Recent developments across your competitive landscape.
+          <h2 className="text-lg font-bold tracking-tight text-[#11110F]">
+            Latest News & Intelligence
+          </h2>
+          <p className="text-xs text-[#77736B]">
+            Key developments across your monitored companies
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1.5 font-mono text-[11px]">
-            <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-            <span>Updated {lastUpdatedSec} sec ago</span>
-          </span>
-          <Link
-            href="/intelligence"
-            className="font-semibold text-primary hover:text-primary/80 flex items-center gap-1"
-          >
-            <span>All Intelligence</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        <Link
+          href="/intelligence"
+          className="text-xs font-semibold text-[#11110F] hover:text-[#4B4840] inline-flex items-center gap-1 transition-colors"
+        >
+          <span>View All Intelligence</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
-      {/* 3-Column Responsive Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {items.map((item) => {
-          const media = getIntelligenceMedia(item.id, item.companyTicker);
-          const timeAgo = formatTimeAgo(item.timestamp);
-
+      {/* 4-Card Desktop Grid (1 col mobile, 2 col tablet, 4 col desktop) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
+        {news.map((item) => {
           return (
             <article
               key={item.id}
-              onClick={() => router.push(`/intelligence/${item.id}`)}
-              className="bg-card rounded-md border border-border shadow-xs overflow-hidden flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-primary/50"
+              className="bg-[#F8F6F0] rounded-xl border border-[#C9C4B9] overflow-hidden flex flex-col justify-between hover:border-[#11110F] shadow-xs transition-all duration-200 h-full"
             >
-              <div>
-                {/* Real-World Technology / Datacenter Image with 3D Hover Scale */}
-                <div className="w-full h-44 relative overflow-hidden bg-[#11110F]">
+              <div className="flex flex-col flex-1">
+                {/* Fixed 16:9 Aspect Ratio Thumbnail Image Container */}
+                <div className="w-full aspect-[16/9] relative overflow-hidden bg-[#E8E4DB] shrink-0">
                   <SafeImage
-                    src={media.imageUrl}
-                    alt={media.altText}
-                    fallbackTicker={item.companyTicker}
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fallbackTicker={item.ticker}
+                    fallbackName={item.companyName}
+                    aspectRatio="16/9"
+                    priority={true}
                     enableHoverEffect={true}
-                    className="h-full w-full opacity-90 group-hover:opacity-100 transition-opacity"
+                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-103"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#11110F]/80 via-transparent to-transparent pointer-events-none" />
 
-                  {/* Overlaid Badges */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-[#11110F]/90 text-[#F5F2EA] backdrop-blur-xs border border-[#F5F2EA]/10 shadow-xs">
-                      {item.companyTicker}
+                  {/* Overlaid Ticker Badge */}
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-[#11110F] text-[#F8F6F0] shadow-sm">
+                      {item.ticker}
                     </span>
-                    <CategoryBadge category={item.category} />
-                  </div>
-
-                  <div className="absolute top-3 right-3">
-                    <SeverityBadge severity={item.impact} />
-                  </div>
-
-                  <div className="absolute bottom-2 left-3 right-3 text-[11px] text-[#F5F2EA]/90 font-medium truncate drop-shadow-xs">
-                    {media.caption}
                   </div>
                 </div>
 
-                {/* Content Area */}
-                <div className="p-4 sm:p-5 space-y-3">
-                  <h3 className="text-sm font-bold text-foreground leading-snug group-hover:opacity-80 transition-opacity line-clamp-2">
-                    {item.title}
-                  </h3>
+                {/* Card Body */}
+                <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                  <div className="space-y-2.5">
+                    {/* Badge & Timestamp Row */}
+                    <div className="flex items-center justify-between gap-1 text-[11px]">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {/* Impact Badge */}
+                        <span
+                          className={cn(
+                            "px-1.5 py-0.5 rounded font-mono font-bold text-[10px]",
+                            item.impact === "High"
+                              ? "bg-[#E7F3E8] text-[#16803C]"
+                              : item.impact === "Medium"
+                              ? "bg-[#FFF0D6] text-[#C77700]"
+                              : "bg-[#E7F0FC] text-[#1769D1]"
+                          )}
+                        >
+                          [{item.impact}]
+                        </span>
+                        {/* Category */}
+                        <span className="px-1.5 py-0.5 rounded bg-[#E8E4DB] text-[#4B4840] font-medium text-[10px]">
+                          {item.category}
+                        </span>
+                      </div>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {item.summary}
-                  </p>
+                      <span className="text-[#77736B] text-[10px] whitespace-nowrap">
+                        {item.timeAgo}
+                      </span>
+                    </div>
 
-                  {/* WHY IT MATTERS Section */}
-                  <div className="p-2.5 rounded-md bg-background border border-border text-xs space-y-1">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground block">
-                      Why It Matters
-                    </span>
-                    <p className="text-[11px] text-foreground leading-relaxed line-clamp-2">
-                      {item.leonAnalysis.marketImpact}
+                    {/* Headline */}
+                    <h3
+                      onClick={() => router.push(`/intelligence/${item.id}`)}
+                      className="text-[13px] font-bold text-[#11110F] leading-snug cursor-pointer hover:text-[#4B4840] line-clamp-2 min-h-[36px] transition-colors"
+                    >
+                      {item.title}
+                    </h3>
+
+                    {/* Summary */}
+                    <p className="text-xs text-[#4B4840] line-clamp-2 min-h-[32px] leading-relaxed">
+                      {item.summary}
                     </p>
                   </div>
 
-                  {/* LEON ASSESSMENT Section */}
-                  <div className="p-2.5 rounded-md bg-muted/50 border border-border text-xs space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-primary flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-primary" />
-                        Leon Assessment
+                  <div className="space-y-2 pt-1">
+                    {/* WHY IT MATTERS Section */}
+                    <div className="p-2.5 rounded-lg bg-[#FBFAF6] border border-[#DDD8CE] text-xs space-y-1">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#77736B] block">
+                        Why It Matters
                       </span>
-                      <span className="text-[10px] font-mono text-muted-foreground font-semibold">
-                        [AI ASSESSMENT]
-                      </span>
+                      <p className="text-[11px] text-[#11110F] leading-relaxed line-clamp-2">
+                        {item.whyItMatters}
+                      </p>
                     </div>
-                    <p className="text-[11px] text-foreground leading-relaxed line-clamp-2">
-                      {item.leonAnalysis.competitiveImplications}
-                    </p>
+
+                    {/* LEON'S ASSESSMENT Section */}
+                    <div className="p-2.5 rounded-lg bg-[#EEE8FF] border border-[#DDD8CE] text-xs space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6C4CE8] flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-[#6C4CE8]" />
+                          Leon&apos;s Assessment
+                        </span>
+                        <span className="text-[9px] font-mono text-[#6C4CE8] font-bold bg-[#E8E4DB]/60 px-1 rounded">
+                          AI
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#11110F] leading-relaxed line-clamp-2">
+                        {item.leonAssessment}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Card Footer */}
-              <div className="p-4 sm:p-5 pt-0 border-t border-border mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                <span className="font-mono text-[11px] text-muted-foreground flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#2E7D32]" />
-                  <span>
-                    {item.sources.length} sources · {timeAgo}
-                  </span>
-                </span>
-
-                <span className="font-semibold text-primary group-hover:text-primary/80 flex items-center gap-1 transition-colors text-xs">
-                  <span>View Intelligence</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                </span>
+              {/* Action Buttons */}
+              <div className="p-4 pt-0 border-t border-[#DDD8CE] mt-2 flex items-center gap-2">
+                <button
+                  onClick={() => router.push(`/intelligence/${item.id}`)}
+                  className="flex-1 py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-[#11110F] text-[#F8F6F0] hover:bg-[#33312B] transition-colors text-center"
+                >
+                  View Intelligence
+                </button>
+                <button
+                  onClick={() =>
+                    askLeon({
+                      type: "intelligence",
+                      company: item.companyName,
+                      title: item.title,
+                      summary: item.summary,
+                    })
+                  }
+                  className="py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-[#E8E4DB] text-[#11110F] hover:bg-[#DDD8CE] transition-colors inline-flex items-center gap-1"
+                  title="Ask Leon about this development"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>Ask Leon</span>
+                </button>
               </div>
             </article>
           );
@@ -165,17 +246,4 @@ export function LatestNewsGrid() {
       </div>
     </section>
   );
-}
-
-function formatTimeAgo(isoString: string): string {
-  try {
-    const diffMs = Date.now() - new Date(isoString).getTime();
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    if (hours < 1) return "Just now";
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
-  } catch {
-    return "2h ago";
-  }
 }

@@ -1,146 +1,78 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
-  MONITORED_MARKET_STOCKS,
   getStockChartData,
   TimeframeOption,
-  LEON_MARKET_ASSESSMENT,
 } from "@/lib/mock/market-data";
 import { cn } from "@/lib/utils";
-import { Sparkles, BarChart2 } from "lucide-react";
 
-type RankingMetric = "marketCap" | "revenue" | "price" | "performance";
+const COMPANIES = [
+  { ticker: "NVDA", label: "NVIDIA", color: "#16803C", finalReturn: "+28.4%" },
+  { ticker: "AMD", label: "AMD", color: "#1769D1", finalReturn: "+12.1%" },
+  { ticker: "MSFT", label: "Microsoft", color: "#E97817", finalReturn: "+8.3%" },
+  { ticker: "GOOGL", label: "Google", color: "#D9A400", finalReturn: "+6.5%" },
+  { ticker: "AMZN", label: "Amazon", color: "#6C4CE8", finalReturn: "+4.2%" },
+  { ticker: "INTC", label: "Intel", color: "#77736B", finalReturn: "-2.1%" },
+];
 
 export function StockCompetitionChart() {
   const [timeframe, setTimeframe] = useState<TimeframeOption>("1M");
-  const [activeTickers, setActiveTickers] = useState<string[]>([
-    "NVDA",
-    "AMD",
-    "MSFT",
-    "GOOGL",
-  ]);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const [rankingMetric, setRankingMetric] = useState<RankingMetric>("marketCap");
+  const [hoverIndex, setHoverIndex] = useState<number | null>(4); // Default to last point (Dec 14) as shown in reference
 
-  const chartData = useMemo(() => getStockChartData(timeframe), [timeframe]);
+  const data = getStockChartData(timeframe);
+  const activeIndex = hoverIndex !== null ? hoverIndex : data.length - 1;
+  const activePoint = data[activeIndex] || data[data.length - 1];
 
-  const toggleTicker = (ticker: string) => {
-    if (activeTickers.includes(ticker)) {
-      if (activeTickers.length > 1) {
-        setActiveTickers(activeTickers.filter((t) => t !== ticker));
-      }
-    } else {
-      setActiveTickers([...activeTickers, ticker]);
-    }
+  // SVG Chart Dimensions
+  const svgWidth = 600;
+  const svgHeight = 220;
+  const padding = { top: 20, right: 30, bottom: 30, left: 45 };
+  const graphWidth = svgWidth - padding.left - padding.right;
+  const graphHeight = svgHeight - padding.top - padding.bottom;
+
+  // Y-axis fixed domain: -20% to +40% (total 60%)
+  const yMin = -20;
+  const yMax = 40;
+  const yRange = yMax - yMin;
+
+  const getY = (val: number) => {
+    return padding.top + graphHeight - ((val - yMin) / yRange) * graphHeight;
   };
 
-  // SVG Chart bounds
-  const width = 640;
-  const height = 260;
-  const padding = { top: 20, right: 30, bottom: 35, left: 45 };
-  const graphWidth = width - padding.left - padding.right;
-  const graphHeight = height - padding.top - padding.bottom;
+  const getX = (index: number) => {
+    return padding.left + (index / (data.length - 1)) * graphWidth;
+  };
 
-  // Normalized percentage scale based on first point
-  const normalizedSeries = useMemo(() => {
-    if (chartData.length === 0) return {};
-    const firstPoint = chartData[0];
-    const series: Record<string, { x: number; y: number; pct: number; raw: number }[]> = {};
-
-    activeTickers.forEach((ticker) => {
-      const baseVal = Number(firstPoint[ticker]) || 1;
-      series[ticker] = chartData.map((d, i) => {
-        const raw = Number(d[ticker]) || baseVal;
-        const pct = ((raw - baseVal) / baseVal) * 100;
-        return {
-          x: padding.left + (i / (chartData.length - 1)) * graphWidth,
-          y: 0, // computed below
-          pct,
-          raw,
-        };
-      });
-    });
-
-    // Compute min and max percentage across active tickers
-    let minPct = -5;
-    let maxPct = 10;
-    activeTickers.forEach((ticker) => {
-      series[ticker]?.forEach((pt) => {
-        if (pt.pct < minPct) minPct = pt.pct;
-        if (pt.pct > maxPct) maxPct = pt.pct;
-      });
-    });
-
-    const range = Math.max(maxPct - minPct, 4);
-    activeTickers.forEach((ticker) => {
-      series[ticker]?.forEach((pt) => {
-        pt.y = padding.top + graphHeight - ((pt.pct - minPct) / range) * graphHeight;
-      });
-    });
-
-    return { series, minPct, maxPct };
-  }, [chartData, activeTickers, graphHeight, graphWidth, padding.left, padding.top]);
-
-  const activeHoverPoint = hoverIndex !== null ? chartData[hoverIndex] : chartData[chartData.length - 1];
-
-  // Ranked companies according to selected metric
-  const rankedStocks = useMemo(() => {
-    const sorted = [...MONITORED_MARKET_STOCKS];
-    switch (rankingMetric) {
-      case "marketCap":
-        return sorted.sort((a, b) => b.marketCapValue - a.marketCapValue);
-      case "revenue":
-        return sorted.sort((a, b) => b.revenueValue - a.revenueValue);
-      case "price":
-        return sorted.sort((a, b) => b.price - a.price);
-      case "performance":
-        return sorted.sort((a, b) => b.change1MPercent - a.change1MPercent);
-    }
-  }, [rankingMetric]);
-
-  const maxRankValue = useMemo(() => {
-    switch (rankingMetric) {
-      case "marketCap":
-        return 4520;
-      case "revenue":
-        return 604.3;
-      case "price":
-        return 450;
-      case "performance":
-        return 20;
-    }
-  }, [rankingMetric]);
+  // Helper to generate SVG polyline path
+  const createPath = (ticker: string) => {
+    return data
+      .map((d, i) => `${i === 0 ? "M" : "L"} ${getX(i).toFixed(1)} ${getY(Number(d[ticker])).toFixed(1)}`)
+      .join(" ");
+  };
 
   return (
-    <div className="bg-card rounded-md border border-border shadow-xs flex flex-col justify-between overflow-hidden">
-      {/* Header with Title and Timeframes */}
-      <div className="p-4 sm:p-5 border-b border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="bg-[#F8F6F0] rounded-xl border border-[#C9C4B9] p-5 lg:p-6 shadow-xs flex flex-col justify-between h-full min-h-[440px] select-none">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
-              Stock Competition
-            </span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#E8F5E9] text-[#2E7D32] border border-[#A5D6A7]">
-              Real-time Benchmark
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Comparative price trajectories normalized by timeframe.
+          <h2 className="text-base font-bold text-[#11110F]">Stock Performance</h2>
+          <p className="text-xs text-[#77736B] mt-0.5">
+            Compare top AI and semiconductor companies
           </p>
         </div>
 
-        {/* Timeframe Selector */}
-        <div className="flex items-center gap-1 bg-muted p-1 rounded-sm border border-border self-start sm:self-center">
+        {/* Timeframe pill selector */}
+        <div className="flex items-center gap-1 bg-[#E8E4DB] p-0.5 rounded-md border border-[#DDD8CE] self-start sm:self-center">
           {(["1D", "1W", "1M", "3M", "6M", "1Y"] as TimeframeOption[]).map((tf) => (
             <button
               key={tf}
               onClick={() => setTimeframe(tf)}
               className={cn(
-                "px-2.5 py-1 text-xs font-mono font-bold rounded-sm transition-all",
+                "px-2.5 py-1 text-xs font-semibold rounded-xs transition-colors",
                 timeframe === tf
-                  ? "bg-background text-foreground shadow-xs border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                  ? "bg-[#11110F] text-[#F8F6F0] shadow-xs"
+                  : "text-[#4B4840] hover:text-[#11110F]"
               )}
             >
               {tf}
@@ -149,299 +81,157 @@ export function StockCompetitionChart() {
         </div>
       </div>
 
-      {/* Interactive Company Filter Pills */}
-      <div className="px-4 sm:px-5 pt-3 flex flex-wrap items-center gap-1.5">
-        <span className="text-[10px] font-mono font-semibold text-muted-foreground uppercase tracking-wider mr-1">
-          Entities:
-        </span>
-        {MONITORED_MARKET_STOCKS.map((stock) => {
-          const isActive = activeTickers.includes(stock.ticker);
-          return (
-            <button
-              key={stock.ticker}
-              onClick={() => toggleTicker(stock.ticker)}
-              className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-bold transition-all border",
-                isActive
-                  ? "bg-primary text-primary-foreground border-primary shadow-2xs"
-                  : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
-              )}
-            >
-              <span
-                className="w-2 h-2 rounded-full shrink-0"
-                style={{ backgroundColor: stock.color }}
-              />
-              <span>{stock.ticker}</span>
-              <span className="font-normal opacity-70 hidden sm:inline">
-                ${stock.price.toFixed(2)}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Chart Canvas Area */}
-      <div className="p-4 sm:p-5 relative">
-        <div className="w-full relative h-[250px] overflow-hidden select-none">
-          <svg
-            viewBox={`0 0 ${width} ${height}`}
-            className="w-full h-full overflow-visible"
-            onMouseLeave={() => setHoverIndex(null)}
-          >
-            {/* Grid horizontal lines */}
-            {[0, 0.25, 0.5, 0.75, 1].map((pct, idx) => {
-              const yPos = padding.top + pct * graphHeight;
-              return (
-                <g key={idx}>
-                  <line
-                    x1={padding.left}
-                    y1={yPos}
-                    x2={width - padding.right}
-                    y2={yPos}
-                    stroke="#E2E8F0"
-                    strokeDasharray="3 3"
-                    strokeWidth={1}
-                  />
-                </g>
-              );
-            })}
-
-            {/* Zero % reference baseline */}
-            {normalizedSeries.minPct !== undefined &&
-              normalizedSeries.minPct < 0 &&
-              normalizedSeries.maxPct !== undefined &&
-              normalizedSeries.maxPct > 0 && (
+      {/* Interactive SVG Chart */}
+      <div className="relative w-full my-2">
+        <svg
+          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+          className="w-full h-auto overflow-visible"
+          onMouseLeave={() => setHoverIndex(4)}
+        >
+          {/* Horizontal Gridlines & Y-Axis Labels */}
+          {[40, 20, 0, -20].map((val) => {
+            const y = getY(val);
+            return (
+              <g key={val}>
                 <line
                   x1={padding.left}
-                  y1={
-                    padding.top +
-                    graphHeight -
-                    ((0 - normalizedSeries.minPct) /
-                      (normalizedSeries.maxPct - normalizedSeries.minPct)) *
-                      graphHeight
-                  }
-                  x2={width - padding.right}
-                  y2={
-                    padding.top +
-                    graphHeight -
-                    ((0 - normalizedSeries.minPct) /
-                      (normalizedSeries.maxPct - normalizedSeries.minPct)) *
-                      graphHeight
-                  }
-                  stroke="#94A3B8"
-                  strokeWidth={1}
+                  y1={y}
+                  x2={svgWidth - padding.right}
+                  y2={y}
+                  stroke={val === 0 ? "#C9C4B9" : "#E8E4DB"}
+                  strokeWidth={val === 0 ? "1.5" : "1"}
+                  strokeDasharray={val === 0 ? "none" : "3 3"}
                 />
-              )}
-
-            {/* Render lines for active tickers */}
-            {activeTickers.map((ticker) => {
-              const pts = normalizedSeries.series?.[ticker];
-              if (!pts || pts.length === 0) return null;
-              const stock = MONITORED_MARKET_STOCKS.find((s) => s.ticker === ticker);
-              const color = stock?.color || "#2563EB";
-
-              const pathString = pts.reduce(
-                (acc, pt, i) => `${acc} ${i === 0 ? "M" : "L"} ${pt.x} ${pt.y}`,
-                ""
-              );
-
-              return (
-                <g key={ticker}>
-                  <path
-                    d={pathString}
-                    fill="none"
-                    stroke={color}
-                    strokeWidth={2.2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="transition-all duration-300"
-                  />
-                  {/* End node pill */}
-                  <circle
-                    cx={pts[pts.length - 1].x}
-                    cy={pts[pts.length - 1].y}
-                    r={3.5}
-                    fill={color}
-                  />
-                </g>
-              );
-            })}
-
-            {/* Hover Vertical Scrubber Line */}
-            {hoverIndex !== null && chartData[hoverIndex] && (
-              <line
-                x1={padding.left + (hoverIndex / (chartData.length - 1)) * graphWidth}
-                y1={padding.top}
-                x2={padding.left + (hoverIndex / (chartData.length - 1)) * graphWidth}
-                y2={padding.top + graphHeight}
-                stroke="#0F172A"
-                strokeWidth={1.5}
-                strokeDasharray="2 2"
-              />
-            )}
-
-            {/* X-axis date labels */}
-            {chartData.map((d, i) => {
-              if (i % Math.ceil(chartData.length / 6) !== 0 && i !== chartData.length - 1)
-                return null;
-              const xPos = padding.left + (i / (chartData.length - 1)) * graphWidth;
-              return (
                 <text
-                  key={i}
-                  x={xPos}
-                  y={height - 10}
-                  textAnchor="middle"
-                  className="fill-slate-400 font-mono text-[10px]"
+                  x={padding.left - 8}
+                  y={y + 3.5}
+                  textAnchor="end"
+                  className="text-[10px] fill-[#77736B] font-mono"
                 >
-                  {d.dateLabel}
+                  {val > 0 ? `+${val}%` : `${val}%`}
                 </text>
-              );
-            })}
-
-            {/* Interactive hover rect columns */}
-            {chartData.map((_, i) => {
-              const colWidth = graphWidth / chartData.length;
-              const xPos = padding.left + i * colWidth - colWidth / 2;
-              return (
-                <rect
-                  key={i}
-                  x={xPos}
-                  y={padding.top}
-                  width={colWidth}
-                  height={graphHeight}
-                  fill="transparent"
-                  className="cursor-crosshair"
-                  onMouseEnter={() => setHoverIndex(i)}
-                />
-              );
-            })}
-          </svg>
-        </div>
-
-        {/* Live Hover Readout Strip */}
-        <div className="mt-2 pt-2 border-t border-border flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
-          <span className="text-muted-foreground font-sans">
-            Date: <strong className="text-foreground">{activeHoverPoint?.dateLabel}</strong>
-          </span>
-          <div className="flex items-center gap-3 flex-wrap">
-            {activeTickers.map((ticker) => {
-              const stock = MONITORED_MARKET_STOCKS.find((s) => s.ticker === ticker);
-              const val = activeHoverPoint ? Number(activeHoverPoint[ticker]) : undefined;
-              return (
-                <span key={ticker} className="flex items-center gap-1">
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: stock?.color }}
-                  />
-                  <span className="font-bold text-foreground">{ticker}:</span>
-                  <span className="text-muted-foreground">${val ? val.toFixed(2) : "--"}</span>
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Market Cap & Metric Ranking Sub-Section */}
-      <div className="px-4 sm:px-5 py-3.5 bg-muted/40 border-t border-border">
-        <div className="flex items-center justify-between flex-wrap gap-2 mb-2.5">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-            <BarChart2 className="w-3.5 h-3.5 text-muted-foreground" />
-            Competitive Sizing Leaderboard
-          </span>
-
-          <div className="flex items-center gap-1 text-[11px] font-mono">
-            {(
-              [
-                { id: "marketCap", label: "Market Cap" },
-                { id: "revenue", label: "Revenue" },
-                { id: "price", label: "Stock Price" },
-                { id: "performance", label: "1M Drift" },
-              ] as const
-            ).map((btn) => (
-              <button
-                key={btn.id}
-                onClick={() => setRankingMetric(btn.id)}
-                className={cn(
-                  "px-2 py-0.5 rounded-sm transition-all border",
-                  rankingMetric === btn.id
-                    ? "bg-primary text-primary-foreground font-bold border-primary"
-                    : "text-muted-foreground hover:text-foreground bg-background border-border"
-                )}
-              >
-                {btn.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Visual Progress Bars */}
-        <div className="space-y-1.5">
-          {rankedStocks.map((s, idx) => {
-            let displayVal = "";
-            let numVal = 0;
-            if (rankingMetric === "marketCap") {
-              displayVal = s.marketCapStr;
-              numVal = s.marketCapValue;
-            } else if (rankingMetric === "revenue") {
-              displayVal = s.revenueStr;
-              numVal = s.revenueValue;
-            } else if (rankingMetric === "price") {
-              displayVal = `$${s.price.toFixed(2)}`;
-              numVal = s.price;
-            } else {
-              displayVal = `+${s.change1MPercent}%`;
-              numVal = s.change1MPercent;
-            }
-
-            const pctWidth = Math.min(100, Math.max(8, (numVal / maxRankValue) * 100));
-
-            return (
-              <div key={s.ticker} className="flex items-center gap-3 text-xs">
-                <span className="w-5 font-mono text-muted-foreground font-semibold">{idx + 1}.</span>
-                <span className="w-14 font-mono font-bold text-foreground">{s.ticker}</span>
-                <div className="flex-1 bg-background h-2 rounded-full border border-border overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${pctWidth}%`,
-                      backgroundColor: s.color,
-                    }}
-                  />
-                </div>
-                <span className="w-18 text-right font-mono font-bold text-foreground">
-                  {displayVal}
-                </span>
-                <span
-                  className={cn(
-                    "w-28 text-right text-[11px] font-medium hidden sm:inline",
-                    s.momentumStatus === "declining" ? "text-[#C62828]" : "text-[#2E7D32]"
-                  )}
-                >
-                  {s.momentum}
-                </span>
-              </div>
+              </g>
             );
           })}
+
+          {/* Vertical Guide Line on Hover */}
+          {activeIndex !== null && (
+            <line
+              x1={getX(activeIndex)}
+              y1={padding.top}
+              x2={getX(activeIndex)}
+              y2={padding.top + graphHeight}
+              stroke="#DDD8CE"
+              strokeWidth="1.5"
+              strokeDasharray="2 2"
+            />
+          )}
+
+          {/* Company Trend Lines */}
+          {COMPANIES.map((company) => (
+            <path
+              key={company.ticker}
+              d={createPath(company.ticker)}
+              fill="none"
+              stroke={company.color}
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ))}
+
+          {/* Dots on Active Position */}
+          {COMPANIES.map((company) => {
+            const val = Number(activePoint[company.ticker]);
+            return (
+              <circle
+                key={`dot-${company.ticker}`}
+                cx={getX(activeIndex)}
+                cy={getY(val)}
+                r="3.5"
+                fill={company.color}
+                stroke="#F8F6F0"
+                strokeWidth="1.5"
+              />
+            );
+          })}
+
+          {/* Invisible interactive hover rects */}
+          {data.map((d, i) => (
+            <rect
+              key={i}
+              x={getX(i) - graphWidth / (data.length * 2)}
+              y={padding.top}
+              width={graphWidth / data.length}
+              height={graphHeight}
+              fill="transparent"
+              className="cursor-crosshair"
+              onMouseEnter={() => setHoverIndex(i)}
+            />
+          ))}
+
+          {/* X-Axis Date Labels */}
+          {data.map((d, i) => (
+            <text
+              key={`x-${i}`}
+              x={getX(i)}
+              y={svgHeight - 8}
+              textAnchor="middle"
+              className="text-[10px] fill-[#77736B] font-medium"
+            >
+              {d.dateLabel}
+            </text>
+          ))}
+        </svg>
+
+        {/* Floating Tooltip matching Reference Frame */}
+        <div
+          className="absolute right-6 top-2 z-10 w-44 rounded-md border border-[#DDD8CE] bg-[#FBFAF6] p-2.5 shadow-sm text-xs pointer-events-none"
+        >
+          <div className="text-[11px] font-bold text-[#11110F] pb-1.5 border-b border-[#DDD8CE]">
+            Dec 14, 2024
+          </div>
+          <div className="space-y-1 pt-1.5 font-mono text-[11px]">
+            {COMPANIES.map((c) => {
+              const val = Number(activePoint[c.ticker]);
+              const formatted = val > 0 ? `+${val}%` : `${val}%`;
+              return (
+                <div key={c.ticker} className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+                    <span className="text-[#11110F] font-sans text-xs">{c.label}</span>
+                  </div>
+                  <span
+                    className={cn(
+                      "font-bold",
+                      val >= 0 ? "text-[#16803C]" : "text-[#C62828]"
+                    )}
+                  >
+                    {formatted}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Leon Assessment Synthesis Strip */}
-      <div className="p-3.5 bg-muted/80 border-t border-border flex items-start gap-2.5">
-        <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-        <div className="text-xs">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="font-bold text-foreground font-mono text-[11px]">
-              LEON ASSESSMENT
-            </span>
-            <span className="text-[10px] text-muted-foreground font-mono">
-              Confidence: {Math.round(LEON_MARKET_ASSESSMENT.confidence * 100)}%
+      {/* Legend below the chart */}
+      <div className="pt-3 border-t border-[#DDD8CE] flex items-center justify-between flex-wrap gap-2 text-xs">
+        {COMPANIES.map((c) => (
+          <div key={c.ticker} className="flex items-center gap-1.5 font-medium">
+            <span className="size-2.5 rounded-2xs shrink-0" style={{ backgroundColor: c.color }} />
+            <span className="text-[#11110F]">{c.label}</span>
+            <span
+              className={cn(
+                "font-mono text-[11px] font-bold",
+                c.finalReturn.startsWith("+") ? "text-[#16803C]" : "text-[#C62828]"
+              )}
+            >
+              {c.finalReturn}
             </span>
           </div>
-          <p className="text-foreground text-[11px] leading-relaxed">
-            {LEON_MARKET_ASSESSMENT.synthesis}
-          </p>
-        </div>
+        ))}
       </div>
     </div>
   );

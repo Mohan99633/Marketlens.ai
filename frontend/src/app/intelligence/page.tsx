@@ -4,56 +4,64 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AppShell, useAppShell } from "@/components/layout/AppShell";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { CategoryBadge } from "@/components/shared/category-badge";
-import { SeverityBadge } from "@/components/shared/severity-badge";
-import { EmptyState } from "@/components/shared/empty-state";
+import { CompanyLogo } from "@/components/shared/company-logo";
+import { SafeImage } from "@/components/shared/safe-image";
 import { getIntelligence } from "@/lib/mock";
 import { IntelligenceItem } from "@/lib/types/models";
-import { IntelligenceCategory, AlertSeverity } from "@/lib/types/design-system";
+import { getIntelligenceMedia } from "@/lib/media/intelligence-images";
 import {
-  BrainCircuit,
   Search,
-  Bot,
-  ExternalLink,
-  ShieldCheck,
-  RefreshCw,
+  ChevronDown,
   Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Bookmark,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const ALL_CATEGORIES: IntelligenceCategory[] = [
-  "Product",
-  "Financial",
-  "Technology",
-  "Partnership",
-  "Acquisition",
-  "Regulatory",
-  "Strategy",
-  "Market",
+const COMPANY_TABS = [
+  { label: "All", ticker: "ALL" },
+  { label: "NVIDIA", ticker: "NVDA" },
+  { label: "AMD", ticker: "AMD" },
+  { label: "Microsoft", ticker: "MSFT" },
+  { label: "Google", ticker: "GOOGL" },
+  { label: "Amazon", ticker: "AMZN" },
+  { label: "Intel", ticker: "INTC" },
 ];
 
-const ALL_IMPACTS: AlertSeverity[] = ["Critical", "High", "Medium", "Low"];
-
-export default function IntelligenceCenterPage() {
+export default function IntelligenceFeedPage() {
   const router = useRouter();
   const { askLeon } = useAppShell();
   const [items, setItems] = useState<IntelligenceItem[]>([]);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedImpact, setSelectedImpact] = useState<string>("all");
-  const [selectedCompany, setSelectedCompany] = useState<string>("all");
+  const [selectedCompany, setSelectedCompany] = useState("ALL");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [selectedImpact, setSelectedImpact] = useState("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [savedIds, setSavedIds] = useState<string[]>([]);
 
   useEffect(() => {
     getIntelligence().then(setItems);
   }, []);
 
+  const toggleSave = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSavedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
   const filtered = items.filter((item) => {
-    if (selectedCategory !== "all" && item.category !== selectedCategory) return false;
-    if (selectedImpact !== "all" && item.impact !== selectedImpact) return false;
-    if (selectedCompany !== "all" && item.companyTicker !== selectedCompany) return false;
-    if (search.trim()) {
-      const q = search.toLowerCase();
+    if (selectedCompany !== "ALL" && item.companyTicker !== selectedCompany) {
+      return false;
+    }
+    if (selectedCategory !== "ALL" && item.category !== selectedCategory) {
+      return false;
+    }
+    if (selectedImpact !== "ALL" && item.impact !== selectedImpact) {
+      return false;
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
       return (
         item.title.toLowerCase().includes(q) ||
         item.summary.toLowerCase().includes(q) ||
@@ -65,239 +73,252 @@ export default function IntelligenceCenterPage() {
 
   return (
     <AppShell>
-      <div className="p-4 md:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-[#DDD8CE]">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground font-mono flex items-center gap-2">
-              <BrainCircuit className="size-6 text-primary" />
-              INTELLIGENCE CENTER
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#11110F]">
+              Intelligence
             </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Live feed of autonomous market discoveries, strategic moves, and competitive threat assessments.
+            <p className="text-xs sm:text-sm text-[#77736B] mt-0.5">
+              Curated insights, analysis, and key developments across your monitored companies.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => alert("Simulating continuous ingest refresh from Leon...")}
-              className="text-xs h-8 gap-1.5"
-            >
-              <RefreshCw className="size-3" /> Refresh Feed
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
+            <button
               onClick={() =>
                 askLeon({
                   type: "general",
-                  title: "Intelligence Feed Overview",
+                  title: "Intelligence Feed Synthesis",
+                  summary: "Synthesize the most urgent developments across semiconductors and hyperscalers.",
                 })
               }
-              className="text-xs h-8 gap-1.5 font-bold"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#11110F] text-[#F8F6F0] hover:bg-[#33312B] transition-colors shadow-xs"
             >
-              <Bot className="size-3.5" /> Ask Leon
-            </Button>
+              <Sparkles className="w-3.5 h-3.5 text-[#F8F6F0]" />
+              <span>Ask Leon Feed Synthesis</span>
+            </button>
           </div>
         </div>
 
-        {/* Filter Toolbar */}
-        <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs space-y-3">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-3 top-2.5 size-3.5 text-muted-foreground" />
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search intelligence titles, companies, or keywords..."
-                className="pl-9 text-xs h-9"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <span className="text-xs font-semibold text-muted-foreground shrink-0">Company:</span>
-              <select
-                value={selectedCompany}
-                onChange={(e) => setSelectedCompany(e.target.value)}
-                className="h-8 rounded-lg border border-border/80 bg-background px-2.5 text-xs text-foreground outline-hidden"
-              >
-                <option value="all">All Companies</option>
-                <option value="NVDA">NVIDIA (NVDA)</option>
-                <option value="AMD">AMD (AMD)</option>
-                <option value="INTC">Intel (INTC)</option>
-                <option value="MSFT">Microsoft (MSFT)</option>
-                <option value="GOOGL">Alphabet (GOOGL)</option>
-                <option value="AMZN">Amazon (AMZN)</option>
-              </select>
-
-              <span className="text-xs font-semibold text-muted-foreground shrink-0 ml-2">Impact:</span>
-              <select
-                value={selectedImpact}
-                onChange={(e) => setSelectedImpact(e.target.value)}
-                className="h-8 rounded-lg border border-border/80 bg-background px-2.5 text-xs text-foreground outline-hidden"
-              >
-                <option value="all">All Impacts</option>
-                {ALL_IMPACTS.map((imp) => (
-                  <option key={imp} value={imp}>
-                    {imp}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Category Chips Bar */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pt-2 border-t border-border/60 pb-1">
-            <button
-              onClick={() => setSelectedCategory("all")}
-              className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-colors shrink-0 ${
-                selectedCategory === "all"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
-              }`}
-            >
-              All Categories
-            </button>
-            {ALL_CATEGORIES.map((cat) => (
+        {/* Company Logo Filter Bar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            {COMPANY_TABS.map((tab) => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-colors shrink-0 ${
-                  selectedCategory === cat
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted/50 text-muted-foreground hover:bg-muted"
-                }`}
+                key={tab.ticker}
+                onClick={() => setSelectedCompany(tab.ticker)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5",
+                  selectedCompany === tab.ticker
+                    ? "bg-[#11110F] text-[#F8F6F0] font-semibold"
+                    : "bg-[#E8E4DB] text-[#4B4840] hover:bg-[#DDD8CE]"
+                )}
               >
-                {cat}
+                {tab.ticker !== "ALL" && (
+                  <CompanyLogo ticker={tab.ticker} size={14} />
+                )}
+                <span>{tab.label}</span>
               </button>
             ))}
+            <button className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#E8E4DB] text-[#4B4840] hover:bg-[#DDD8CE] inline-flex items-center gap-1">
+              <span>More</span>
+              <ChevronDown className="w-3 h-3" />
+            </button>
           </div>
+
+          {/* Search bar */}
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#77736B]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search intelligence..."
+              className="w-full pl-9 pr-3 py-1.5 rounded-lg text-xs bg-[#E8E4DB] border border-[#DDD8CE] text-[#11110F] placeholder-[#77736B] focus:outline-none focus:border-[#11110F]"
+            />
+          </div>
+        </div>
+
+        {/* Secondary Filter Dropdowns */}
+        <div className="flex items-center gap-2 flex-wrap text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#77736B] font-mono text-[11px] uppercase">Category:</span>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-[#E8E4DB] border border-[#DDD8CE] text-[#11110F] rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+            >
+              <option value="ALL">All Categories</option>
+              <option value="Technology">Technology</option>
+              <option value="Partnership">Partnership</option>
+              <option value="Strategy">Strategy</option>
+              <option value="Product">Product</option>
+              <option value="Financial">Financial</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#77736B] font-mono text-[11px] uppercase">Impact:</span>
+            <select
+              value={selectedImpact}
+              onChange={(e) => setSelectedImpact(e.target.value)}
+              className="bg-[#E8E4DB] border border-[#DDD8CE] text-[#11110F] rounded-lg px-2.5 py-1 text-xs focus:outline-none"
+            >
+              <option value="ALL">All Impact</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          <span className="text-[#77736B] text-[11px] font-mono ml-auto">
+            Showing {filtered.length} developments
+          </span>
         </div>
 
         {/* Intelligence Feed Cards */}
-        {filtered.length === 0 ? (
-          <EmptyState
-            title="No Intelligence Matching Filters"
-            description="No competitive discoveries meet your current filter combination. Try clearing some filters."
-            actionLabel="Reset All Filters"
-            onAction={() => {
-              setSelectedCategory("all");
-              setSelectedImpact("all");
-              setSelectedCompany("all");
-              setSearch("");
-            }}
-          />
-        ) : (
-          <div className="space-y-4">
-            {filtered.map((item) => (
-              <div
+        <div className="space-y-4">
+          {filtered.map((item, idx) => {
+            const media = getIntelligenceMedia(item.id, item.companyTicker);
+            const isSaved = savedIds.includes(item.id);
+
+            return (
+              <article
                 key={item.id}
-                className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs hover:border-primary/40 transition-all space-y-4"
+                onClick={() => router.push(`/intelligence/${item.id}`)}
+                className="bg-[#F8F6F0] rounded-xl border border-[#C9C4B9] p-4 sm:p-5 hover:border-[#11110F] shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col md:flex-row gap-5 items-start group"
               >
-                {/* Item Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-muted text-foreground">
+                {/* Left Thumbnail Image */}
+                <div className="w-full md:w-56 aspect-[16/9] md:h-36 rounded-lg bg-[#E8E4DB] overflow-hidden shrink-0 relative">
+                  <SafeImage
+                    src={media.imageUrl}
+                    alt={item.title}
+                    fallbackTicker={item.companyTicker}
+                    aspectRatio="16/9"
+                    priority={idx < 3}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-103"
+                  />
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-[#11110F] text-[#F8F6F0]">
                       {item.companyTicker}
                     </span>
-                    <CategoryBadge category={item.category} size="sm" />
-                    <SeverityBadge severity={item.impact} size="sm" showIcon />
-                    <span className="text-[11px] text-muted-foreground font-mono">
-                      {new Date(item.timestamp).toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 self-end sm:self-auto">
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() =>
-                        askLeon({
-                          type: "intelligence",
-                          id: item.id,
-                          company: item.companyTicker,
-                          category: item.category,
-                          impact: item.impact,
-                          title: item.title,
-                        })
-                      }
-                      className="text-xs h-7 text-primary hover:bg-primary/10 gap-1"
-                    >
-                      <Bot className="size-3.5" /> Ask Leon
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="xs"
-                      onClick={() => router.push(`/intelligence/${item.id}`)}
-                      className="text-xs h-7 gap-1"
-                    >
-                      <ExternalLink className="size-3" /> Detailed Evidence
-                    </Button>
                   </div>
                 </div>
 
-                {/* Title & Summary */}
-                <div>
-                  <Link href={`/intelligence/${item.id}`} className="hover:underline">
-                    <h2 className="text-base font-bold text-foreground leading-snug">
-                      {item.title}
-                    </h2>
-                  </Link>
-                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                {/* Right Content */}
+                <div className="flex-1 space-y-2.5 w-full">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <CompanyLogo ticker={item.companyTicker} size={16} />
+                      <span className="text-xs font-bold text-[#11110F]">
+                        {item.companyName}
+                      </span>
+                      {/* Impact badge */}
+                      <span
+                        className={cn(
+                          "px-2 py-0.5 rounded text-[10px] font-mono font-bold",
+                          item.impact === "Critical"
+                            ? "bg-[#F9E7E5] text-[#C62828]"
+                            : item.impact === "High"
+                            ? "bg-[#E7F3E8] text-[#16803C]"
+                            : item.impact === "Medium"
+                            ? "bg-[#FFF0D6] text-[#C77700]"
+                            : "bg-[#E7F0FC] text-[#1769D1]"
+                        )}
+                      >
+                        [{item.impact}]
+                      </span>
+                      {/* Category tag */}
+                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-[#E8E4DB] text-[#4B4840]">
+                        {item.category}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-[#77736B] font-mono">
+                        {new Date(item.timestamp).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                      <button
+                        onClick={(e) => toggleSave(item.id, e)}
+                        className="text-[#77736B] hover:text-[#11110F] p-1"
+                        title={isSaved ? "Remove bookmark" : "Save article"}
+                      >
+                        <Bookmark
+                          className={cn(
+                            "w-4 h-4",
+                            isSaved ? "fill-[#11110F] text-[#11110F]" : ""
+                          )}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Headline */}
+                  <h2 className="text-base font-bold text-[#11110F] leading-snug group-hover:text-[#4B4840] transition-colors">
+                    {item.title}
+                  </h2>
+
+                  {/* Summary */}
+                  <p className="text-xs text-[#4B4840] leading-relaxed line-clamp-2">
                     {item.summary}
                   </p>
-                </div>
 
-                {/* Leon AI Synthesis Box */}
-                <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-primary">
-                    <span className="flex items-center gap-1.5">
-                      <Sparkles className="size-3.5" /> Leon Strategic Assessment
+                  {/* Why it matters preview */}
+                  <div className="p-2.5 rounded-lg bg-[#FBFAF6] border border-[#DDD8CE] text-xs">
+                    <span className="text-[10px] font-mono font-bold uppercase text-[#77736B] block">
+                      Why It Matters
                     </span>
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase">
-                      Threat Target: {item.leonAnalysis.threatAssessment.to} ({item.leonAnalysis.threatAssessment.level})
-                    </span>
-                  </div>
-                  <p className="text-xs text-foreground leading-relaxed">
-                    {item.leonAnalysis.competitiveImplications}
-                  </p>
-                </div>
-
-                {/* Footer Sources & Related Companies */}
-                <div className="pt-3 border-t border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                    <ShieldCheck className="size-3.5 text-emerald-600" />
-                    <span>{item.sources.length} Verified Sources:</span>
-                    <span className="font-medium truncate max-w-xs">
-                      {item.sources.map((s) => s.publisher).join(", ")}
-                    </span>
+                    <p className="text-[11px] text-[#11110F] leading-relaxed line-clamp-1 mt-0.5">
+                      {item.leonAnalysis.marketImpact}
+                    </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground font-mono">Related:</span>
-                    <div className="flex gap-1">
-                      {item.relatedCompanies.map((rel) => (
-                        <span
-                          key={rel}
-                          className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground"
-                        >
-                          {rel}
-                        </span>
-                      ))}
+                  {/* Footer & Actions */}
+                  <div className="flex items-center justify-between pt-1 text-xs">
+                    <span className="text-[11px] text-[#77736B] font-mono flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#16803C]" />
+                      <span>{item.sources.length} Verified Sources</span>
+                    </span>
+
+                    <div
+                      className="flex items-center gap-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={() =>
+                          askLeon({
+                            type: "intelligence",
+                            company: item.companyName,
+                            title: item.title,
+                            summary: item.summary,
+                          })
+                        }
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#E8E4DB] text-[#11110F] hover:bg-[#DDD8CE] transition-colors"
+                      >
+                        <Sparkles className="w-3 h-3 text-[#6C4CE8]" />
+                        <span>Ask Leon</span>
+                      </button>
+
+                      <Link
+                        href={`/intelligence/${item.id}`}
+                        className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#11110F] text-[#F8F6F0] hover:bg-[#33312B] transition-colors"
+                      >
+                        <span>View Intelligence</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              </article>
+            );
+          })}
+        </div>
       </div>
     </AppShell>
   );

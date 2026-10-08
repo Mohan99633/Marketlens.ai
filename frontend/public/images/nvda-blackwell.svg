@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08140B"/>
+      <stop offset="50%" stop-color="#0F2816"/>
+      <stop offset="100%" stop-color="#050C07"/>
+    </linearGradient>
+    <linearGradient id="dieGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B3822"/>
+      <stop offset="50%" stop-color="#16803C"/>
+      <stop offset="100%" stop-color="#0D2013"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D9A400"/>
+      <stop offset="100%" stop-color="#996E00"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#16803C" stroke-width="0.75" stroke-opacity="0.15"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+
+  <!-- Radial Glow Behind Chip -->
+  <circle cx="400" cy="225" r="220" fill="url(#glow)"/>
+
+  <!-- Trace Lines -->
+  <g stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.4" fill="none">
+    <path d="M 50 100 L 220 100 L 280 160 L 320 160"/>
+    <path d="M 50 180 L 180 180 L 240 225 L 320 225"/>
+    <path d="M 50 350 L 200 350 L 260 290 L 320 290"/>
+    <path d="M 750 100 L 580 100 L 520 160 L 480 160"/>
+    <path d="M 750 180 L 620 180 L 560 225 L 480 225"/>
+    <path d="M 750 350 L 600 350 L 540 290 L 480 290"/>
+    <circle cx="220" cy="100" r="3" fill="#22C55E" stroke="none"/>
+    <circle cx="180" cy="180" r="3" fill="#22C55E" stroke="none"/>
+    <circle cx="580" cy="100" r="3" fill="#22C55E" stroke="none"/>
+    <circle cx="620" cy="180" r="3" fill="#22C55E" stroke="none"/>
+  </g>
+
+  <!-- Silicon Substrate (Blackwell Package) -->
+  <rect x="250" y="95" width="300" height="260" rx="16" fill="#111B14" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.6"/>
+
+  <!-- Dual Reticle Die (Blackwell B200 / GB200) -->
+  <!-- Die 1 -->
+  <rect x="280" y="145" width="115" height="160" rx="8" fill="url(#dieGrad)" stroke="#22C55E" stroke-width="1"/>
+  <!-- Die 2 -->
+  <rect x="405" y="145" width="115" height="160" rx="8" fill="url(#dieGrad)" stroke="#22C55E" stroke-width="1"/>
+
+  <!-- 10TB/s NV-HBI Ultra Interconnect -->
+  <rect x="393" y="165" width="14" height="120" rx="2" fill="url(#gold)" opacity="0.9"/>
+
+  <!-- HBM3e Memory Stacks (8 stacks surrounding die) -->
+  <g fill="#182A1E" stroke="#22C55E" stroke-width="0.75" stroke-opacity="0.8">
+    <rect x="280" y="112" width="52" height="25" rx="3"/>
+    <rect x="342" y="112" width="52" height="25" rx="3"/>
+    <rect x="406" y="112" width="52" height="25" rx="3"/>
+    <rect x="468" y="112" width="52" height="25" rx="3"/>
+    <rect x="280" y="313" width="52" height="25" rx="3"/>
+    <rect x="342" y="313" width="52" height="25" rx="3"/>
+    <rect x="406" y="313" width="52" height="25" rx="3"/>
+    <rect x="468" y="313" width="52" height="25" rx="3"/>
+  </g>
+
+  <!-- Labels on HBM -->
+  <text x="306" y="128" fill="#86EFAC" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">HBM3e</text>
+  <text x="368" y="128" fill="#86EFAC" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">HBM3e</text>
+  <text x="432" y="128" fill="#86EFAC" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">HBM3e</text>
+  <text x="494" y="128" fill="#86EFAC" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">HBM3e</text>
+
+  <!-- Die Labels -->
+  <text x="337" y="220" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="1">NVIDIA</text>
+  <text x="337" y="238" fill="#86EFAC" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">B200</text>
+  <text x="462" y="220" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="900" text-anchor="middle" letter-spacing="1">NVIDIA</text>
+  <text x="462" y="238" fill="#86EFAC" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">ULTRA</text>
+
+  <!-- Technical Telemetry Badge (Bottom Left) -->
+  <rect x="40" y="385" width="220" height="30" rx="6" fill="#111B14" stroke="#22C55E" stroke-width="1" stroke-opacity="0.3"/>
+  <circle cx="56" cy="400" r="4" fill="#22C55E"/>
+  <text x="70" y="404" fill="#E2E8F0" font-family="monospace" font-size="10" font-weight="bold">BLACKWELL ARCHITECTURE</text>
+  <text x="235" y="404" fill="#86EFAC" font-family="monospace" font-size="9">208B Tr</text>
+</svg>
