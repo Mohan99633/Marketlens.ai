@@ -11,7 +11,6 @@ import { getCompanyById, getIntelligence } from "@/lib/mock";
 import { Company, IntelligenceItem } from "@/lib/types/models";
 import { getCompanyMedia } from "@/lib/media/company-images";
 import { SafeImage } from "@/components/shared/safe-image";
-import { IntelligenceNetwork } from "@/components/3d/IntelligenceNetwork";
 import {
   Scale,
   Bot,
@@ -192,9 +191,6 @@ function CompanyDetailContent() {
             <span className="text-[10px] font-mono text-slate-400">
               Interactive relationship cluster: Moats • Products • Supply Chain • Competitors
             </span>
-          </div>
-          <div className="h-[220px] w-full flex items-center justify-center">
-            <IntelligenceNetwork className="w-full h-full" />
           </div>
         </div>
 

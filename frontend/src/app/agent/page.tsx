@@ -5,7 +5,6 @@ import { AppShell } from "@/components/layout/AppShell";
 import { getAgentStatus, getAgentTasks, getAgentWatchers, getSimulatedLeonResponse } from "@/lib/mock";
 import { AgentTask } from "@/lib/types/models";
 import { AgentWatcher, MOCK_AGENT_STATUS } from "@/lib/mock/agent";
-import { LeonCore } from "@/components/3d/LeonCore";
 import { LeonAgentState } from "@/lib/types/design-system";
 import {
   Sparkles,
@@ -181,13 +180,15 @@ export default function LeonControlCenterPage() {
               </div>
 
               <div className="py-2 flex flex-col items-center justify-center relative">
-                <LeonCore state={currentState} size={200} />
-                <div className="text-center mt-2">
+                <div className="w-[200px] h-[200px] rounded-full bg-blue-50/50 flex items-center justify-center border-4 border-blue-100 shadow-inner">
+                  <Cpu className="w-16 h-16 text-blue-500" />
+                </div>
+                <div className="text-center mt-4">
                   <span className="text-xs font-semibold text-slate-800 block">
                     {stateColors[currentState].text}
                   </span>
-                  <span className="text-[11px] text-slate-400 font-mono">
-                    Three.js WebGL Core with 2D SVG Auto-Fallback
+                  <span className="text-[11px] text-slate-400 font-mono mt-1 block">
+                    Professional 2D Intelligence Core
                   </span>
                 </div>
               </div>

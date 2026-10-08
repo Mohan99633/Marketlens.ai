@@ -31,11 +31,6 @@ import { DataTable, ColumnDef } from "@/components/shared/data-table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ErrorState } from "@/components/shared/error-state";
 
-import { LeonCore } from "@/components/3d/LeonCore";
-import { CompetitiveGraph } from "@/components/3d/CompetitiveGraph";
-import { IntelligenceNetwork } from "@/components/3d/IntelligenceNetwork";
-import { AgentActivity } from "@/components/3d/AgentActivity";
-
 import {
   LeonAgentState,
   AlertSeverity,
@@ -302,11 +297,9 @@ export default function DesignSystemPage() {
               </div>
 
               <div className="my-3 flex items-center justify-center">
-                <LeonCore
-                  state={leonState}
-                  size={210}
-                  forceFallback={forceFallback}
-                />
+                <div className="w-[210px] h-[210px] rounded-full bg-blue-50/50 flex items-center justify-center border-4 border-blue-100 shadow-inner">
+                  <Cpu className="w-16 h-16 text-blue-500" />
+                </div>
               </div>
 
               <div className="text-center mt-2">
@@ -346,7 +339,6 @@ export default function DesignSystemPage() {
                 </div>
               </div>
 
-              <AgentActivity currentPhase="Analysis" />
             </div>
           </div>
         </section>
@@ -373,7 +365,6 @@ export default function DesignSystemPage() {
                   TOP 5 TARGETS
                 </span>
               </div>
-              <CompetitiveGraph forceFallback={forceFallback} />
             </div>
 
             <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs flex flex-col justify-between">
@@ -386,7 +377,6 @@ export default function DesignSystemPage() {
                     EVIDENCE TRACEABLE
                   </span>
                 </div>
-                <IntelligenceNetwork />
               </div>
               <p className="text-[11px] text-muted-foreground mt-4 leading-relaxed">
                 Every intelligence item produced by Leon must map to factual citations and verifiable primary sources

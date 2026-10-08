@@ -4,23 +4,19 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MONITORED_MARKET_STOCKS } from "@/lib/mock/market-data";
-import { CompetitiveGraph } from "@/components/3d/CompetitiveGraph";
 import { cn } from "@/lib/utils";
 import {
   ArrowRight,
   Zap,
-  Layers,
   ChevronRight,
 } from "lucide-react";
 
 export function CompetitiveIntelligencePanel() {
   const router = useRouter();
   const [hoveredTicker, setHoveredTicker] = useState<string | null>(null);
-  const [show3DNetwork, setShow3DNetwork] = useState(true);
-
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between overflow-hidden">
-      {/* Header with Title and 3D Visualizer Toggle */}
+      {/* Header with Title */}
       <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -35,38 +31,7 @@ export function CompetitiveIntelligencePanel() {
             Real-time competitive momentum, market capitalizations, and strategic vectors.
           </p>
         </div>
-
-        <button
-          onClick={() => setShow3DNetwork(!show3DNetwork)}
-          className={cn(
-            "px-2.5 py-1 text-[11px] font-mono font-bold rounded-md transition-all border",
-            show3DNetwork
-              ? "bg-blue-50 text-blue-700 border-blue-200"
-              : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
-          )}
-          title="Toggle 3D Competitive Relationship Topology"
-        >
-          {show3DNetwork ? "3D Network Active" : "Show 3D Graph"}
-        </button>
       </div>
-
-      {/* Embedded 3D Competitive Landscape Mini-Orbital */}
-      {show3DNetwork && (
-        <div className="relative bg-slate-950/2 border-b border-slate-100 px-4 py-2">
-          <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 mb-1">
-            <span className="flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-blue-600" />
-              <span>3D Competitive Relationship Topology</span>
-            </span>
-            <span className="text-[10px] text-slate-400">
-              Node size = Market Power • Orbital distance = Overlap
-            </span>
-          </div>
-          <div className="h-[180px] w-full relative">
-            <CompetitiveGraph className="w-full h-full" />
-          </div>
-        </div>
-      )}
 
       {/* Monitored Company Rows */}
       <div className="divide-y divide-slate-100 flex-1">

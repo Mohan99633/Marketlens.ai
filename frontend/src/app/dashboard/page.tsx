@@ -6,7 +6,6 @@ import { AppShell, useAppShell } from "@/components/layout/AppShell";
 import { CompetitiveIntelligencePanel } from "@/components/dashboard/CompetitiveIntelligencePanel";
 import { StockCompetitionChart } from "@/components/dashboard/StockCompetitionChart";
 import { LatestNewsGrid } from "@/components/dashboard/LatestNewsGrid";
-import { LeonCore } from "@/components/3d/LeonCore";
 import { MONITORED_MARKET_STOCKS } from "@/lib/mock/market-data";
 import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
@@ -54,8 +53,8 @@ export default function DashboardPage() {
               className="flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors shadow-2xs group"
               title="Open Leon Agent Chat"
             >
-              <div className="w-4 h-4 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
-                <LeonCore state="Researching" size={24} />
+              <div className="w-4 h-4 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-blue-100 text-blue-600">
+                <Sparkles size={12} />
               </div>
               <span>LEON ● ACTIVE</span>
               <span className="text-[10px] text-blue-500 group-hover:translate-x-0.5 transition-transform">
@@ -67,14 +66,14 @@ export default function DashboardPage() {
 
         {/* FIRST MAJOR CONTENT AREA — TWO MAJOR PANELS SIDE BY SIDE (50 / 50 Desktop) */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          {/* LEFT PANEL: COMPETITIVE INTELLIGENCE */}
-          <div className="w-full">
-            <CompetitiveIntelligencePanel />
-          </div>
-
-          {/* RIGHT PANEL: STOCK COMPETITION */}
+          {/* LEFT PANEL: STOCK COMPETITION */}
           <div className="w-full">
             <StockCompetitionChart />
+          </div>
+
+          {/* RIGHT PANEL: COMPETITIVE INTELLIGENCE */}
+          <div className="w-full">
+            <CompetitiveIntelligencePanel />
           </div>
         </section>
 

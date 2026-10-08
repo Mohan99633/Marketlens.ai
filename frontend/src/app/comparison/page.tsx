@@ -5,7 +5,6 @@ import Link from "next/link";
 import { AppShell, useAppShell } from "@/components/layout/AppShell";
 import { getCompanies } from "@/lib/mock";
 import { Company } from "@/lib/types/models";
-import { CompetitiveGraph } from "@/components/3d/CompetitiveGraph";
 import { SeverityBadge } from "@/components/shared/severity-badge";
 import {
   Sparkles,
@@ -183,13 +182,6 @@ export default function ComparisonPage() {
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-sky-600"></span> INTC (Incumbent)
               </span>
-            </div>
-          </div>
-
-          <div className="mt-3 relative rounded-md border border-slate-100 bg-slate-950/2 p-2">
-            <CompetitiveGraph className="w-full" />
-            <div className="absolute bottom-3 left-4 text-[11px] text-slate-400 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded border border-slate-200">
-              Auto-pauses on off-screen scroll • Touch / mouse drag interactive
             </div>
           </div>
         </div>
