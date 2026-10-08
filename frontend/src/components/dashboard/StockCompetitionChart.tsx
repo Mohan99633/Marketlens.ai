@@ -113,34 +113,34 @@ export function StockCompetitionChart() {
   }, [rankingMetric]);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between overflow-hidden">
+    <div className="bg-card rounded-md border border-border shadow-xs flex flex-col justify-between overflow-hidden">
       {/* Header with Title and Timeframes */}
-      <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="p-4 sm:p-5 border-b border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-800">
+            <span className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
               Stock Competition
             </span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#E8F5E9] text-[#2E7D32] border border-[#A5D6A7]">
               Real-time Benchmark
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Comparative price trajectories normalized by timeframe.
           </p>
         </div>
 
         {/* Timeframe Selector */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg self-start sm:self-center">
+        <div className="flex items-center gap-1 bg-muted p-1 rounded-sm border border-border self-start sm:self-center">
           {(["1D", "1W", "1M", "3M", "6M", "1Y"] as TimeframeOption[]).map((tf) => (
             <button
               key={tf}
               onClick={() => setTimeframe(tf)}
               className={cn(
-                "px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-all",
+                "px-2.5 py-1 text-xs font-mono font-bold rounded-sm transition-all",
                 timeframe === tf
-                  ? "bg-white text-slate-900 shadow-xs"
-                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/50"
+                  ? "bg-background text-foreground shadow-xs border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
               )}
             >
               {tf}
@@ -151,7 +151,7 @@ export function StockCompetitionChart() {
 
       {/* Interactive Company Filter Pills */}
       <div className="px-4 sm:px-5 pt-3 flex flex-wrap items-center gap-1.5">
-        <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-wider mr-1">
+        <span className="text-[10px] font-mono font-semibold text-muted-foreground uppercase tracking-wider mr-1">
           Entities:
         </span>
         {MONITORED_MARKET_STOCKS.map((stock) => {
@@ -163,8 +163,8 @@ export function StockCompetitionChart() {
               className={cn(
                 "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-bold transition-all border",
                 isActive
-                  ? "bg-slate-900 text-white border-slate-900 shadow-xs"
-                  : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                  ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                  : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
               )}
             >
               <span
@@ -319,9 +319,9 @@ export function StockCompetitionChart() {
         </div>
 
         {/* Live Hover Readout Strip */}
-        <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
-          <span className="text-slate-500 font-sans">
-            Date: <strong className="text-slate-800">{activeHoverPoint?.dateLabel}</strong>
+        <div className="mt-2 pt-2 border-t border-border flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
+          <span className="text-muted-foreground font-sans">
+            Date: <strong className="text-foreground">{activeHoverPoint?.dateLabel}</strong>
           </span>
           <div className="flex items-center gap-3 flex-wrap">
             {activeTickers.map((ticker) => {
@@ -333,8 +333,8 @@ export function StockCompetitionChart() {
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ backgroundColor: stock?.color }}
                   />
-                  <span className="font-bold text-slate-800">{ticker}:</span>
-                  <span className="text-slate-600">${val ? val.toFixed(2) : "--"}</span>
+                  <span className="font-bold text-foreground">{ticker}:</span>
+                  <span className="text-muted-foreground">${val ? val.toFixed(2) : "--"}</span>
                 </span>
               );
             })}
@@ -343,10 +343,10 @@ export function StockCompetitionChart() {
       </div>
 
       {/* Market Cap & Metric Ranking Sub-Section */}
-      <div className="px-4 sm:px-5 py-3.5 bg-slate-50/70 border-t border-slate-100">
+      <div className="px-4 sm:px-5 py-3.5 bg-muted/40 border-t border-border">
         <div className="flex items-center justify-between flex-wrap gap-2 mb-2.5">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <BarChart2 className="w-3.5 h-3.5 text-blue-600" />
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+            <BarChart2 className="w-3.5 h-3.5 text-muted-foreground" />
             Competitive Sizing Leaderboard
           </span>
 
@@ -363,10 +363,10 @@ export function StockCompetitionChart() {
                 key={btn.id}
                 onClick={() => setRankingMetric(btn.id)}
                 className={cn(
-                  "px-2 py-0.5 rounded transition-all",
+                  "px-2 py-0.5 rounded-sm transition-all border",
                   rankingMetric === btn.id
-                    ? "bg-slate-900 text-white font-bold"
-                    : "text-slate-500 hover:text-slate-900 bg-white border border-slate-200"
+                    ? "bg-primary text-primary-foreground font-bold border-primary"
+                    : "text-muted-foreground hover:text-foreground bg-background border-border"
                 )}
               >
                 {btn.label}
@@ -398,9 +398,9 @@ export function StockCompetitionChart() {
 
             return (
               <div key={s.ticker} className="flex items-center gap-3 text-xs">
-                <span className="w-5 font-mono text-slate-400 font-semibold">{idx + 1}.</span>
-                <span className="w-14 font-mono font-bold text-slate-800">{s.ticker}</span>
-                <div className="flex-1 bg-white h-2 rounded-full border border-slate-200 overflow-hidden">
+                <span className="w-5 font-mono text-muted-foreground font-semibold">{idx + 1}.</span>
+                <span className="w-14 font-mono font-bold text-foreground">{s.ticker}</span>
+                <div className="flex-1 bg-background h-2 rounded-full border border-border overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
@@ -409,13 +409,13 @@ export function StockCompetitionChart() {
                     }}
                   />
                 </div>
-                <span className="w-18 text-right font-mono font-bold text-slate-900">
+                <span className="w-18 text-right font-mono font-bold text-foreground">
                   {displayVal}
                 </span>
                 <span
                   className={cn(
                     "w-28 text-right text-[11px] font-medium hidden sm:inline",
-                    s.momentumStatus === "declining" ? "text-rose-600" : "text-emerald-700"
+                    s.momentumStatus === "declining" ? "text-[#C62828]" : "text-[#2E7D32]"
                   )}
                 >
                   {s.momentum}
@@ -427,18 +427,18 @@ export function StockCompetitionChart() {
       </div>
 
       {/* Leon Assessment Synthesis Strip */}
-      <div className="p-3.5 bg-blue-50/60 border-t border-blue-100 flex items-start gap-2.5">
-        <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+      <div className="p-3.5 bg-muted/80 border-t border-border flex items-start gap-2.5">
+        <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
         <div className="text-xs">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="font-bold text-blue-950 font-mono text-[11px]">
+            <span className="font-bold text-foreground font-mono text-[11px]">
               LEON ASSESSMENT
             </span>
-            <span className="text-[10px] text-blue-700 font-mono">
+            <span className="text-[10px] text-muted-foreground font-mono">
               Confidence: {Math.round(LEON_MARKET_ASSESSMENT.confidence * 100)}%
             </span>
           </div>
-          <p className="text-slate-700 text-[11px] leading-relaxed">
+          <p className="text-foreground text-[11px] leading-relaxed">
             {LEON_MARKET_ASSESSMENT.synthesis}
           </p>
         </div>

@@ -349,109 +349,109 @@ export default function LeonControlCenterPage() {
         </div>
 
         {/* Conversational Interaction & Task Dispatch Console */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[520px]">
+        <div className="bg-card rounded-md border border-border shadow-xs overflow-hidden flex flex-col h-[600px]">
           {/* Console Header */}
-          <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
+          <div className="p-4 bg-background border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-blue-400" />
-              <span className="text-xs font-bold font-mono tracking-wider">
+              <Terminal className="w-4 h-4 text-primary" />
+              <span className="text-xs font-bold font-mono tracking-wider text-foreground">
                 LEON INTELLIGENCE DISPATCH CONSOLE
               </span>
-              <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">
+              <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded font-mono border border-border">
                 Context-Aware Reasoning
               </span>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-400 text-[11px]">Hermes Shell</span>
+              <span className="text-muted-foreground text-[11px]">Hermes Shell</span>
             </div>
           </div>
 
           {/* Quick Prompts Bar */}
-          <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center gap-2 overflow-x-auto text-xs">
-            <span className="text-slate-500 font-semibold uppercase tracking-wider text-[10px] whitespace-nowrap">
+          <div className="px-4 py-2.5 bg-background border-b border-border flex items-center gap-2 overflow-x-auto text-xs">
+            <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px] whitespace-nowrap">
               Suggested Investigations:
             </span>
             <button
               onClick={() => handleSendPrompt("Why is the AMD-Microsoft partnership important for cloud margins?")}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 whitespace-nowrap"
+              className="px-2.5 py-1 rounded bg-muted hover:bg-muted/80 border border-border text-foreground whitespace-nowrap transition-colors"
             >
               Why is this important?
             </button>
             <button
               onClick={() => handleSendPrompt("Compare AMD and NVIDIA software moat and memory capacity.")}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 whitespace-nowrap"
+              className="px-2.5 py-1 rounded bg-muted hover:bg-muted/80 border border-border text-foreground whitespace-nowrap transition-colors"
             >
               Compare AMD and NVIDIA
             </button>
             <button
               onClick={() => handleSendPrompt("What critical competitive shifts changed this week across tier-1 hyperscalers?")}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 whitespace-nowrap"
+              className="px-2.5 py-1 rounded bg-muted hover:bg-muted/80 border border-border text-foreground whitespace-nowrap transition-colors"
             >
               What changed this week?
             </button>
             <button
               onClick={() => handleSendPrompt("Investigate Intel 18A node progress and customer adoption risks.")}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 whitespace-nowrap"
+              className="px-2.5 py-1 rounded bg-muted hover:bg-muted/80 border border-border text-foreground whitespace-nowrap transition-colors"
             >
               Investigate 18A foundry
             </button>
             <button
               onClick={() => handleSendPrompt("Generate an executive competitive report for the enterprise hardware sector.")}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 whitespace-nowrap"
+              className="px-2.5 py-1 rounded bg-muted hover:bg-muted/80 border border-border text-foreground whitespace-nowrap transition-colors"
             >
               Generate a report
             </button>
           </div>
 
           {/* Messages Stream */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50/40">
+          <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-6 bg-background">
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`flex gap-3 max-w-3xl ${
+                className={`flex gap-4 max-w-3xl ${
                   m.sender === "user" ? "ml-auto justify-end" : "mr-auto"
                 }`}
               >
                 {m.sender === "leon" && (
-                  <div className="w-7 h-7 rounded-md bg-blue-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-                    <Sparkles className="w-3.5 h-3.5" />
+                  <div className="w-8 h-8 rounded-md bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs border border-primary">
+                    <Sparkles className="w-4 h-4" />
                   </div>
                 )}
                 <div
-                  className={`rounded-lg p-3 text-xs leading-relaxed space-y-2 shadow-xs ${
+                  className={`rounded-lg p-4 text-sm leading-relaxed shadow-xs ${
                     m.sender === "user"
-                      ? "bg-slate-900 text-white"
-                      : "bg-white border border-slate-200 text-slate-800"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card border border-border text-foreground"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2 border-b border-slate-100/10 pb-1 text-[10px] opacity-75">
-                    <span className="font-bold">
-                      {m.sender === "user" ? "Decision Maker (You)" : "Leon Autonomous Agent"}
+                  <div className="flex items-center justify-between gap-4 border-b border-border/30 pb-2 mb-2 text-[11px] opacity-80">
+                    <span className="font-bold tracking-wide uppercase">
+                      {m.sender === "user" ? "Decision Maker" : "Leon Autonomous Agent"}
                     </span>
-                    <span>{m.timestamp}</span>
+                    <span className="font-mono">{m.timestamp}</span>
                   </div>
 
                   <p className="whitespace-pre-line">{m.text}</p>
 
                   {/* Evidence Citations */}
                   {m.citations && m.citations.length > 0 && (
-                    <div className="pt-2 border-t border-slate-100 space-y-1.5 text-[11px]">
-                      <div className="flex items-center justify-between text-slate-500 font-mono text-[10px]">
+                    <div className="mt-4 pt-3 border-t border-border space-y-2 text-[11px]">
+                      <div className="flex items-center justify-between text-muted-foreground font-mono text-[10px]">
                         <span>CITED EVIDENCE SOURCES ({m.citations.length})</span>
                         {m.confidence && (
-                          <span className="text-emerald-700 font-bold">
+                          <span className="text-[#2E7D32] font-bold">
                             {Math.round(m.confidence * 100)}% CONFIDENCE
                           </span>
                         )}
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         {m.citations.map((c, idx) => (
                           <div
                             key={idx}
-                            className="p-1.5 rounded bg-slate-50 border border-slate-200 flex items-center justify-between text-slate-700"
+                            className="p-2 rounded bg-muted/50 border border-border flex items-center justify-between text-foreground"
                           >
                             <span className="truncate max-w-md font-medium">{c.title}</span>
-                            <span className="text-[10px] font-mono text-blue-700 shrink-0">
+                            <span className="text-[10px] font-mono text-primary/80 shrink-0">
                               {(c.relevance * 100).toFixed(0)}% match
                             </span>
                           </div>
@@ -464,15 +464,15 @@ export default function LeonControlCenterPage() {
             ))}
 
             {isProcessing && (
-              <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 p-2.5 rounded-lg border border-blue-200 w-fit">
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              <div className="flex items-center gap-2 text-sm text-primary bg-muted p-3.5 rounded-lg border border-border w-fit shadow-xs">
+                <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>Leon is querying Hermes Agent runtime and cross-validating telemetry...</span>
               </div>
             )}
           </div>
 
           {/* Console Input Bar */}
-          <div className="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+          <div className="p-4 bg-background border-t border-border flex items-center gap-3">
             <input
               type="text"
               placeholder="Query Leon or command autonomous investigation (e.g., 'Compare AMD vs NVIDIA cloud margins')..."
@@ -481,14 +481,14 @@ export default function LeonControlCenterPage() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSendPrompt();
               }}
-              className="flex-1 px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-slate-900"
+              className="flex-1 px-4 py-2.5 text-sm bg-card border border-border rounded-md focus:bg-background focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground shadow-2xs transition-colors"
             />
             <button
               onClick={() => handleSendPrompt()}
               disabled={isProcessing || !inputPrompt.trim()}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md text-xs font-semibold hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1.5 transition-colors"
+              className="px-5 py-2.5 bg-primary text-primary-foreground rounded-md text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2 transition-colors shadow-xs"
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-4 h-4" />
               <span>Dispatch</span>
             </button>
           </div>

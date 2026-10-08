@@ -187,48 +187,48 @@ export default function ComparisonPage() {
         </div>
 
         {/* Leon Autonomous Comparative Synthesis */}
-        <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50/60 via-slate-50 to-white p-5 shadow-xs">
+        <div className="rounded-md border border-border bg-muted/40 p-5 shadow-xs">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-md bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <div className="w-9 h-9 rounded-md bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs">
               <Sparkles className="w-5 h-5" />
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">
+                  <h3 className="text-sm font-bold text-foreground">
                     Leon Autonomous Comparative Synthesis
                   </h3>
-                  <p className="text-xs text-blue-700 font-medium">
+                  <p className="text-xs text-muted-foreground font-medium">
                     Hermes Agent v0.3 • Real-time cross-entity divergence engine
                   </p>
                 </div>
-                <span className="text-[11px] font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold">
+                <span className="text-[11px] font-mono bg-muted text-muted-foreground border border-border px-2 py-0.5 rounded font-semibold">
                   [LEON AI ASSESSMENT]
                 </span>
               </div>
 
-              <p className="text-xs text-slate-700 leading-relaxed">
+              <p className="text-xs text-foreground leading-relaxed">
                 While <strong>NVIDIA</strong> retains an estimated 82% margin dominance driven by CUDA developer lock-in,
                 <strong> AMD</strong>’s aggressive ROCm 6.3 open-source alliance with OpenAI and Microsoft represents a direct structural threat to NVIDIA’s pricing power.
                 NVIDIA’s revenue growth (+122.4% YoY) significantly outpaces AMD (+17.6% YoY), but AMD’s cost-to-performance ratio in inference workloads is tightening the competitive gap for Tier-2 cloud providers.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-                <div className="p-2.5 rounded bg-white border border-slate-200 text-xs">
-                  <span className="font-semibold text-slate-800 block mb-1">Key Moat Divergence</span>
-                  <p className="text-slate-600">
+                <div className="p-2.5 rounded-md bg-background border border-border text-xs">
+                  <span className="font-semibold text-foreground block mb-1">Key Moat Divergence</span>
+                  <p className="text-muted-foreground">
                     CUDA software ecosystem vs. open-source ROCm/Triton flexibility and chiplet packaging margins.
                   </p>
                 </div>
-                <div className="p-2.5 rounded bg-white border border-slate-200 text-xs">
-                  <span className="font-semibold text-slate-800 block mb-1">Margin Vulnerability</span>
-                  <p className="text-slate-600">
+                <div className="p-2.5 rounded-md bg-background border border-border text-xs">
+                  <span className="font-semibold text-foreground block mb-1">Margin Vulnerability</span>
+                  <p className="text-muted-foreground">
                     Hyperscalers (MSFT, GOOGL, AMZN) deploying internal ASICs to erode merchant accelerator dependence.
                   </p>
                 </div>
-                <div className="p-2.5 rounded bg-white border border-slate-200 text-xs">
-                  <span className="font-semibold text-slate-800 block mb-1">Leon Strategic Forecast</span>
-                  <p className="text-slate-600">
+                <div className="p-2.5 rounded-md bg-background border border-border text-xs">
+                  <span className="font-semibold text-foreground block mb-1">Leon Strategic Forecast</span>
+                  <p className="text-muted-foreground">
                     Next 12 months will see inference workloads commoditize faster than training clusters.
                   </p>
                 </div>
@@ -238,13 +238,13 @@ export default function ComparisonPage() {
         </div>
 
         {/* Tab Controls for Side-by-Side Matrix */}
-        <div className="border-b border-slate-200 flex items-center gap-2">
+        <div className="border-b border-border flex items-center gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab("metrics")}
             className={`pb-3 px-3 text-sm font-semibold border-b-2 transition-colors ${
               activeTab === "metrics"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-600 hover:text-slate-900"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
             Financial & Market Metrics
@@ -253,8 +253,8 @@ export default function ComparisonPage() {
             onClick={() => setActiveTab("products")}
             className={`pb-3 px-3 text-sm font-semibold border-b-2 transition-colors ${
               activeTab === "products"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-600 hover:text-slate-900"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
             AI Products & Tech Stack
@@ -263,8 +263,8 @@ export default function ComparisonPage() {
             onClick={() => setActiveTab("strategy")}
             className={`pb-3 px-3 text-sm font-semibold border-b-2 transition-colors ${
               activeTab === "strategy"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-600 hover:text-slate-900"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
             Moats, Vulnerabilities & Strategy
@@ -273,8 +273,8 @@ export default function ComparisonPage() {
             onClick={() => setActiveTab("leon")}
             className={`pb-3 px-3 text-sm font-semibold border-b-2 transition-colors ${
               activeTab === "leon"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-600 hover:text-slate-900"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
             AI Pulse & Momentum Breakdown
@@ -282,25 +282,25 @@ export default function ComparisonPage() {
         </div>
 
         {/* Comparison Grid */}
-        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
+        <div className="bg-card rounded-md border border-border overflow-hidden shadow-xs">
           {activeTab === "metrics" && (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="py-3 px-4 font-semibold text-slate-700 w-48">
+                  <tr className="bg-muted border-b border-border">
+                    <th className="py-3 px-4 font-semibold text-muted-foreground w-48">
                       Metric [VERIFIED DATA]
                     </th>
                     {selectedCompanies.map((c) => (
-                      <th key={c.id} className="py-3 px-4 font-bold text-slate-900 border-l border-slate-200 min-w-[200px]">
+                      <th key={c.id} className="py-3 px-4 font-bold text-foreground border-l border-border min-w-[200px]">
                         <div className="flex items-center justify-between">
                           <div>
                             <span className="text-sm font-bold block">{c.ticker}</span>
-                            <span className="text-slate-500 font-normal">{c.name}</span>
+                            <span className="text-muted-foreground font-normal">{c.name}</span>
                           </div>
                           <Link
                             href={`/companies/${c.ticker.toLowerCase()}`}
-                            className="text-blue-600 hover:text-blue-800 p-1"
+                            className="text-primary hover:text-primary/80 p-1"
                             title="View Full Company Profile"
                           >
                             <ArrowRight className="w-4 h-4" />
@@ -310,93 +310,93 @@ export default function ComparisonPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Competitive Status</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Competitive Status</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200">
-                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 font-mono">
+                      <td key={c.id} className="py-3 px-4 border-l border-border">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-muted text-foreground border border-border font-mono">
                           {c.status}
                         </span>
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Market Capitalization</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Market Capitalization</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200 font-mono font-semibold text-slate-900">
+                      <td key={c.id} className="py-3 px-4 border-l border-border font-mono font-semibold text-foreground">
                         {c.marketCap}
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Annual Revenue (TTM)</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Annual Revenue (TTM)</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200 font-mono font-medium text-slate-900">
+                      <td key={c.id} className="py-3 px-4 border-l border-border font-mono font-medium text-foreground">
                         {c.revenue}
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Revenue Growth (YoY)</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Revenue Growth (YoY)</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200 font-mono font-bold text-emerald-700">
+                      <td key={c.id} className="py-3 px-4 border-l border-border font-mono font-bold text-[#2E7D32]">
                         {c.revenueGrowth}
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Net Income</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Net Income</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200 font-mono text-slate-900">
+                      <td key={c.id} className="py-3 px-4 border-l border-border font-mono text-foreground">
                         {c.netIncome}
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">R&D Investment</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">R&D Investment</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200">
-                        <span className="font-mono font-medium text-slate-900">
+                      <td key={c.id} className="py-3 px-4 border-l border-border">
+                        <span className="font-mono font-medium text-foreground">
                           {c.financials[0]?.rdExpense || "N/A"}
                         </span>
-                        <span className="text-[11px] text-slate-500 block font-sans">
+                        <span className="text-[11px] text-muted-foreground block font-sans">
                           Latest Quarter
                         </span>
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Stock Price & 1M Drift</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Stock Price & 1M Drift</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200">
-                        <span className="font-mono font-bold text-slate-900">{c.stockPrice}</span>
-                        <span className="text-[11px] block font-mono font-medium text-emerald-700">
+                      <td key={c.id} className="py-3 px-4 border-l border-border">
+                        <span className="font-mono font-bold text-foreground">{c.stockPrice}</span>
+                        <span className="text-[11px] block font-mono font-medium text-[#2E7D32]">
                           {c.stockChange1M} (1M)
                         </span>
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">AI Score (0-100)</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">AI Score (0-100)</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200">
+                      <td key={c.id} className="py-3 px-4 border-l border-border">
                         <div className="flex items-center gap-2">
-                          <div className="w-16 bg-slate-100 rounded-full h-2 overflow-hidden">
+                          <div className="w-16 bg-muted rounded-full h-2 overflow-hidden border border-border">
                             <div
-                              className="bg-blue-600 h-2 rounded-full"
+                              className="bg-primary h-2 rounded-full"
                               style={{ width: `${c.aiScore}%` }}
                             />
                           </div>
-                          <span className="font-mono font-bold text-slate-900">{c.aiScore}</span>
+                          <span className="font-mono font-bold text-foreground">{c.aiScore}</span>
                         </div>
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 px-4 font-medium text-slate-600 bg-slate-50/50">Threat Vector</td>
+                    <td className="py-3 px-4 font-medium text-muted-foreground bg-muted/40">Threat Vector</td>
                     {selectedCompanies.map((c) => (
-                      <td key={c.id} className="py-3 px-4 border-l border-slate-200">
+                      <td key={c.id} className="py-3 px-4 border-l border-border">
                         <SeverityBadge severity={c.pulse.threatLevel} />
                       </td>
                     ))}
@@ -409,24 +409,24 @@ export default function ComparisonPage() {
           {activeTab === "products" && (
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {selectedCompanies.map((c) => (
-                <div key={c.id} className="space-y-4 border border-slate-200 rounded-lg p-4 bg-slate-50/30">
-                  <div className="border-b border-slate-200 pb-2">
-                    <span className="text-sm font-bold text-slate-900 block">{c.name} ({c.ticker})</span>
-                    <span className="text-xs text-slate-500">{c.sector}</span>
+                <div key={c.id} className="space-y-4 border border-border rounded-md p-4 bg-muted/30">
+                  <div className="border-b border-border pb-2">
+                    <span className="text-sm font-bold text-foreground block">{c.name} ({c.ticker})</span>
+                    <span className="text-xs text-muted-foreground">{c.sector}</span>
                   </div>
                   <div className="space-y-3">
-                    <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">
                       Core AI Offerings:
                     </span>
                     {c.products.map((p, idx) => (
-                      <div key={idx} className="p-2.5 rounded bg-white border border-slate-200 text-xs space-y-1">
+                      <div key={idx} className="p-2.5 rounded-md bg-background border border-border text-xs space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-slate-900">{p.name}</span>
-                          <span className="text-[10px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono">
+                          <span className="font-bold text-foreground">{p.name}</span>
+                          <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-mono border border-border">
                             {p.category}
                           </span>
                         </div>
-                        <span className="text-[11px] text-blue-700 font-medium block">
+                        <span className="text-[11px] text-primary/80 font-medium block">
                           Market Share: {p.marketShare}
                         </span>
                       </div>
@@ -440,23 +440,23 @@ export default function ComparisonPage() {
           {activeTab === "strategy" && (
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {selectedCompanies.map((c) => (
-                <div key={c.id} className="space-y-4 border border-slate-200 rounded-lg p-4 bg-slate-50/30">
-                  <div className="border-b border-slate-200 pb-2">
-                    <span className="text-sm font-bold text-slate-900 block">{c.name} ({c.ticker})</span>
-                    <span className="text-xs text-slate-500">Competitive Defense Posture</span>
+                <div key={c.id} className="space-y-4 border border-border rounded-md p-4 bg-muted/30">
+                  <div className="border-b border-border pb-2">
+                    <span className="text-sm font-bold text-foreground block">{c.name} ({c.ticker})</span>
+                    <span className="text-xs text-muted-foreground">Competitive Defense Posture</span>
                   </div>
                   <div className="space-y-3 text-xs">
                     <div>
-                      <span className="font-semibold text-slate-800 block mb-0.5">Primary Strategy</span>
-                      <p className="text-slate-600">{c.strategy}</p>
+                      <span className="font-semibold text-foreground block mb-0.5">Primary Strategy</span>
+                      <p className="text-muted-foreground">{c.strategy}</p>
                     </div>
                     <div>
-                      <span className="font-semibold text-emerald-800 block mb-0.5">Defensible Moat</span>
-                      <p className="text-slate-600">{c.leonAssessment.strategicMoat}</p>
+                      <span className="font-semibold text-[#2E7D32] block mb-0.5">Defensible Moat</span>
+                      <p className="text-muted-foreground">{c.leonAssessment.strategicMoat}</p>
                     </div>
                     <div>
-                      <span className="font-semibold text-rose-800 block mb-0.5">Key Vulnerability</span>
-                      <p className="text-slate-600">{c.leonAssessment.keyVulnerability}</p>
+                      <span className="font-semibold text-[#C62828] block mb-0.5">Key Vulnerability</span>
+                      <p className="text-muted-foreground">{c.leonAssessment.keyVulnerability}</p>
                     </div>
                   </div>
                 </div>
@@ -467,36 +467,36 @@ export default function ComparisonPage() {
           {activeTab === "leon" && (
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {selectedCompanies.map((c) => (
-                <div key={c.id} className="space-y-4 border border-blue-200 rounded-lg p-4 bg-blue-50/20">
-                  <div className="border-b border-blue-200 pb-2">
+                <div key={c.id} className="space-y-4 border border-border rounded-md p-4 bg-muted/30">
+                  <div className="border-b border-border pb-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-900">{c.ticker}</span>
-                      <span className="text-[10px] font-mono bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">
+                      <span className="text-sm font-bold text-foreground">{c.ticker}</span>
+                      <span className="text-[10px] font-mono bg-muted text-muted-foreground border border-border px-1.5 py-0.5 rounded font-bold">
                         Pulse {c.pulse.competitiveScore}/100
                       </span>
                     </div>
-                    <span className="text-xs text-slate-500">{c.name}</span>
+                    <span className="text-xs text-muted-foreground">{c.name}</span>
                   </div>
                   <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center py-1 border-b border-slate-100">
-                      <span className="text-slate-600">Momentum</span>
-                      <span className="font-mono font-bold text-slate-900">{c.pulse.momentum}</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/50">
+                      <span className="text-muted-foreground">Momentum</span>
+                      <span className="font-mono font-bold text-foreground">{c.pulse.momentum}</span>
                     </div>
-                    <div className="flex justify-between items-center py-1 border-b border-slate-100">
-                      <span className="text-slate-600">Innovation Index</span>
-                      <span className="font-mono font-bold text-slate-900">{c.pulse.innovation}/100</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/50">
+                      <span className="text-muted-foreground">Innovation Index</span>
+                      <span className="font-mono font-bold text-foreground">{c.pulse.innovation}/100</span>
                     </div>
-                    <div className="flex justify-between items-center py-1 border-b border-slate-100">
-                      <span className="text-slate-600">Market Power</span>
-                      <span className="font-mono font-bold text-slate-900">{c.pulse.marketPower}/100</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/50">
+                      <span className="text-muted-foreground">Market Power</span>
+                      <span className="font-mono font-bold text-foreground">{c.pulse.marketPower}/100</span>
                     </div>
-                    <div className="flex justify-between items-center py-1 border-b border-slate-100">
-                      <span className="text-slate-600">Technology Depth</span>
-                      <span className="font-mono font-bold text-slate-900">{c.pulse.technologyStrength}/100</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/50">
+                      <span className="text-muted-foreground">Technology Depth</span>
+                      <span className="font-mono font-bold text-foreground">{c.pulse.technologyStrength}/100</span>
                     </div>
                     <div className="pt-2">
-                      <span className="font-semibold text-slate-800 block mb-1">Leon Outlook</span>
-                      <p className="text-slate-600 text-[11px] italic bg-white p-2 rounded border border-slate-200">
+                      <span className="font-semibold text-foreground block mb-1">Leon Outlook</span>
+                      <p className="text-muted-foreground text-[11px] italic bg-background p-2 rounded-md border border-border">
                         &quot;{c.leonAssessment.outlook}&quot;
                       </p>
                     </div>
